@@ -5,14 +5,18 @@
 // RSS Feed URL
 const RSS_FEED_URL = 'https://anchor.fm/s/fc415c4c/podcast/rss';
 
+// Maximale Anzahl der Episoden (rss2json free: max 100)
+const MAX_EPISODES = 100;
+
 // Funktion zum Laden des RSS Feeds
 async function loadPodcastEpisodes() {
     try {
-        // RSS Feed über einen CORS-Proxy laden
-        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}`);
+        // RSS Feed über einen CORS-Proxy laden mit count Parameter
+        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}&count=${MAX_EPISODES}`);
         const data = await response.json();
         
         if (data.status === 'ok') {
+            console.log(`${data.items.length} Episoden geladen`);
             return data.items;
         } else {
             console.error('Fehler beim Laden des RSS Feeds:', data.message);
