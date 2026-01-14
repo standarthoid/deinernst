@@ -5,25 +5,51 @@
 // RSS Feed URL
 const RSS_FEED_URL = 'https://anchor.fm/s/fc415c4c/podcast/rss';
 
-// Maximale Anzahl der Episoden (rss2json free: max 100)
-const MAX_EPISODES = 100;
+// API Key von rss2json.com (Optional - für mehr als 10 Episoden)
+// Registriere dich kostenlos auf https://rss2json.com/ um einen Key zu bekommen
+// Siehe API-KEY-ANLEITUNG.md für Details
+const RSS_API_KEY = 'k0zcye7bzkg5pn3wdhgceepcbq0ofpkgmcsork2n'; // Füge hier deinen API-Key ein, z.B.: 'abcdef123456789'
+
+// Maximale Anzahl der Episoden
+// OHNE API-Key: max 10 Episoden
+// MIT API-Key: max 100 Episoden
+const MAX_EPISODES = RSS_API_KEY ? 100 : 10;
 
 // Funktion zum Laden des RSS Feeds
 async function loadPodcastEpisodes() {
     try {
-        // RSS Feed über einen CORS-Proxy laden mit count Parameter
-        const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}&count=${MAX_EPISODES}`);
+        console.log('🎵 Lade Podcast-Episoden...');
+        
+        // Baue die API-URL
+        let apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}`;
+        
+        // Füge API-Key und count hinzu, falls vorhanden
+        if (RSS_API_KEY) {
+            apiUrl += `&api_key=${RSS_API_KEY}&count=${MAX_EPISODES}`;
+            console.log(`🔑 Verwende API-Key (max ${MAX_EPISODES} Episoden)`);
+        } else {
+            console.log(`⚠️ Kein API-Key - zeige nur 10 Episoden. Siehe API-KEY-ANLEITUNG.md`);
+        }
+        
+        const response = await fetch(apiUrl);
         const data = await response.json();
         
-        if (data.status === 'ok') {
-            console.log(`${data.items.length} Episoden geladen`);
+        if (data.status === 'ok' && data.items && data.items.length > 0) {
+            console.log(`✅ ${data.items.length} Episoden erfolgreich geladen`);
+            
+            // Zeige Hinweis, wenn nur 10 Episoden ohne API-Key
+            if (!RSS_API_KEY && data.items.length === 10) {
+                console.log(`💡 Tipp: Registriere dich auf rss2json.com für mehr Episoden!`);
+            }
+            
             return data.items;
-        } else {
-            console.error('Fehler beim Laden des RSS Feeds:', data.message);
-            return [];
         }
+        
+        console.error('❌ Fehler beim Laden des RSS Feeds:', data.message || 'Unbekannter Fehler');
+        return [];
+        
     } catch (error) {
-        console.error('Fehler beim Laden der Episoden:', error);
+        console.error('❌ Fehler beim Laden der Episoden:', error);
         return [];
     }
 }
@@ -187,7 +213,38 @@ async function displayAllEpisodes() {
     if (episodes.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 60px 0;">
-                <p style="font-size: 1.2rem;">Keine Episoden gefunden. Bitte versuche es später erneut.</p>
+                <div style="font-size: 4rem; margin-bottom: 20px;">😕</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Keine Episoden gefunden</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    Der RSS-Feed konnte nicht geladen werden. Das kann verschiedene Gründe haben:
+                </p>
+                <ul style="text-align: left; max-width: 500px; margin: 0 auto 30px; line-height: 1.8;">
+                    <li>Der RSS-Service ist vorübergehend nicht erreichbar</li>
+                    <li>Zu viele Anfragen in kurzer Zeit (Rate Limit)</li>
+                    <li>Netzwerkproblem</li>
+                </ul>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    <strong>Lösungen:</strong>
+                </p>
+                <ul style="text-align: left; max-width: 500px; margin: 0 auto 30px; line-height: 1.8;">
+                    <li>Warte 1-2 Minuten und lade die Seite neu (F5)</li>
+                    <li>Öffne die Browser-Konsole (F12) für Details</li>
+                    <li>Höre die Episoden direkt auf <a href="https://open.spotify.com/show/DEINE_SHOW_ID" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a></li>
+                </ul>
+                <button onclick="window.location.reload()" style="
+                    padding: 15px 30px;
+                    background: #FF1493;
+                    color: white;
+                    border: 4px solid black;
+                    border-radius: 30px;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+                    text-transform: uppercase;
+                ">
+                    🔄 Seite neu laden
+                </button>
             </div>
         `;
         return;
@@ -197,6 +254,48 @@ async function displayAllEpisodes() {
     const episodesHTML = episodes.map((episode, index) => createEpisodeCard(episode, index)).join('');
     
     container.innerHTML = episodesHTML;
+    
+    // Zeige Hinweis, wenn nur 10 Episoden (kein API-Key)
+    if (episodes.length === 10 && !RSS_API_KEY) {
+        const hint = document.createElement('div');
+        hint.style.cssText = `
+            background: #FFF8E7;
+            border: 4px solid #FFA500;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+        `;
+        hint.innerHTML = `
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">💡</div>
+            <h3 style="font-family: Arial Black, sans-serif; font-size: 1.5rem; margin-bottom: 15px; color: #000;">
+                Möchtest du alle Episoden sehen?
+            </h3>
+            <p style="font-size: 1.1rem; margin-bottom: 20px; line-height: 1.6;">
+                Aktuell werden nur die 10 neuesten Episoden angezeigt.<br>
+                Um <strong>alle Episoden</strong> zu sehen, registriere dich kostenlos bei rss2json.com!
+            </p>
+            <a href="https://rss2json.com/" target="_blank" style="
+                display: inline-block;
+                padding: 12px 25px;
+                background: #FF1493;
+                color: white;
+                text-decoration: none;
+                border: 3px solid #000;
+                border-radius: 25px;
+                font-weight: bold;
+                box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            ">
+                🔑 Kostenlosen API-Key holen
+            </a>
+            <p style="font-size: 0.9rem; margin-top: 15px; color: #666;">
+                Siehe <strong>API-KEY-ANLEITUNG.md</strong> im Repository für Details
+            </p>
+        `;
+        container.appendChild(hint);
+    }
 }
 
 // Lade und zeige neueste Episode auf der Startseite
