@@ -68,11 +68,11 @@ body {
 }
 
 .nav-brand .logo {
-    height: 60px;
-    width: 60px;
-    border: 3px solid var(--comic-black);
-    border-radius: 10px;
-    box-shadow: 4px 4px 0 var(--shadow);
+    height: 50px;
+    width: auto;  /* Behält das Seitenverhältnis bei */
+    border: none;  /* Kein Rahmen, da dein Logo schon einen hat */
+    border-radius: 0;  /* Keine abgerundeten Ecken */
+    box-shadow: none;  /* Kein Schatten, da das Logo schon 3D-Effekt hat */
 }
 
 .nav-brand h1 {
@@ -783,10 +783,10 @@ body {
 }
 
 .footer-logo {
-    width: 80px;
-    height: 80px;
-    border: 3px solid var(--comic-white);
-    border-radius: 10px;
+   height: 80px;
+    width: auto;
+    border: none;
+    border-radius: 0;
 }
 
 .footer-brand h3 {
