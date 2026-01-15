@@ -768,7 +768,7 @@ body {
     display: inline-block;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
     .newsletter-decoration {
         display: none !important;  /* Versteckt sowohl PENG als auch den Stern */
     }
