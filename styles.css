@@ -768,6 +768,11 @@ body {
     display: inline-block;
 }
 
+@media (max-width: 768px) {
+    .newsletter-decoration {
+        display: none;  /* Versteckt sowohl PENG als auch den Stern */
+    }
+}
 /* ===================================
    FOOTER
    =================================== */
