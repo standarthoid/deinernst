@@ -770,7 +770,7 @@ body {
 
 @media (max-width: 768px) {
     .newsletter-decoration {
-        display: none;  /* Versteckt sowohl PENG als auch den Stern */
+        display: none !important;  /* Versteckt sowohl PENG als auch den Stern */
     }
 }
 /* ===================================
