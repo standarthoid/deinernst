@@ -69,10 +69,10 @@ body {
 
 .nav-brand .logo {
     height: 50px;
-    width: auto;  /* Behält das Seitenverhältnis bei */
-    border: none;  /* Kein Rahmen, da dein Logo schon einen hat */
-    border-radius: 0;  /* Keine abgerundeten Ecken */
-    box-shadow: none;  /* Kein Schatten, da das Logo schon 3D-Effekt hat */
+    width: auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .nav-brand h1 {
@@ -783,7 +783,7 @@ body {
 }
 
 .footer-logo {
-   height: 80px;
+    height: 70px;
     width: auto;
     border: none;
     border-radius: 0;
