@@ -83,6 +83,15 @@ body {
     letter-spacing: -1px;
 }
 
+.nav-brand a {
+    text-decoration: none;  /* Keine Unterstreichung */
+    color: inherit;         /* Behält die schwarze Farbe */
+}
+
+.nav-brand a:hover {
+    text-decoration: none;  /* Auch beim Hover keine Unterstreichung */
+}
+
 .mobile-menu-toggle {
     display: none;
     flex-direction: column;
