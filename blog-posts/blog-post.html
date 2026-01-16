@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Post - Dein Ernst?!</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="index.html"><img src="Logo_DeinErnst.png" alt="Dein Ernst?!" class="logo"></a>
+                <a href="index.html"><img src="images/Logo_DeinErnst.png" alt="Dein Ernst?!" class="logo"></a>
                 <a href="index.html"><h1>Dein Ernst?!</h1></a>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -51,7 +51,7 @@
                 </p>
 
                 <div class="blog-post-featured-image">
-                    <img src="logo.png" alt="Blog Post Cover">
+                    <img src="images/logo.png" alt="Blog Post Cover">
                 </div>
             </div>
             <div class="halftone-overlay"></div>
@@ -67,8 +67,9 @@
                         
                         <h2>Der Anfang</h2>
                         <p>
-                            Es war ein ganz normaler Nachmittag, als uns die Idee kam: "Warum machen wir nicht 
-                            einfach einen Podcast?" Klingt einfach, oder? Tja, dein Ernst?!
+                            Es war ein ganz normaler Miri-Marlene-Abend, als uns die Idee kam: "Warum machen wir nicht 
+                            einfach einen Podcast über Feminismus, wenn wir uns doch eh schon die ganze Zeit darüber unterhalten?" 
+                            Klingt einfach, oder? Tja, dein Ernst?!
                         </p>
                         <p>
                             Die ersten Gespräche drehten sich vor allem um die Frage: Worüber sollen wir eigentlich 
@@ -80,7 +81,8 @@
                             <div class="highlight-icon">💡</div>
                             <p>
                                 <strong>Die Idee:</strong> Ein Podcast, der die Dinge beim Namen nennt – ohne Blabla, 
-                                aber mit Humor. Authentisch, ehrlich und manchmal auch ein bisschen unbequem.
+                                aber mit Humor. Authentisch, ehrlich und manchmal auch ein bisschen unbequem. Alltagsgeschichten, die jede Frau
+                                so oder so ähnlich schonmal gehört oder selbst erlebt hat.
                             </p>
                         </div>
 
@@ -98,8 +100,9 @@
                         <div class="blog-quote-box">
                             <div class="quote-mark">"</div>
                             <p class="quote-text">
-                                Der beste Moment war, als wir unsere erste wirklich gute Aufnahme gehört haben. 
-                                Wir haben uns angeschaut und gedacht: Das könnte klappen!
+                                Der beste Moment war, als wir unsere erste annehmbare Aufnahme gehört haben. 
+                                Wir haben die Perfektionismus erstmal über Bord geworfen und uns gedacht:
+                                Manchmal ist einfach machen besser als nur dürber reden.
                             </p>
                             <p class="quote-author">— Host Name</p>
                         </div>
@@ -107,7 +110,7 @@
                         <h2>Der Name</h2>
                         <p>
                             "Dein Ernst?!" war eigentlich ein Scherz. Wir haben bei unseren Gesprächen gemerkt, 
-                            dass wir diesen Satz ständig sagen – wenn etwas überraschend ist, unglaublich, absurd 
+                            dass wir diesen Satz ständig sagen oder uns bei Instareels denken – wenn etwas überraschend ist, unglaublich, absurd 
                             oder einfach zu lustig, um wahr zu sein.
                         </p>
                         <p>
@@ -125,13 +128,15 @@
                         </p>
 
                         <div class="blog-image-box">
-                            <img src="logo.png" alt="Dein Ernst?! Logo">
+                            <img src="images/logo.png" alt="Dein Ernst?! Logo">
                             <p class="image-caption">Unser Logo – Pop-Art-Style, genau wie wir es lieben!</p>
                         </div>
 
                         <h2>Die erste Episode</h2>
                         <p>
-                            Als wir die erste Episode veröffentlicht haben, waren wir nervös. Was, wenn es 
+                            Als wir die erste Episode veröffentlicht haben, waren wir nervös und Marlene sehr überrascht. 
+                            Da sind wohl die Pferde ein bisschen mit mir durchgegangen. Bzw. dachte ich, es wäre klar, dass wir das jetzt veröffentlichen.
+                            Naja, für Marlene noch nicht so ganz. Trotzdem war die Frage, die uns dann beide natürlich brennend interessiert hat: Was, wenn es 
                             niemanden interessiert? Was, wenn die Leute uns blöd finden? Was, wenn...
                         </p>
                         <p>
@@ -161,7 +166,7 @@
 
                         <h2>Und jetzt?</h2>
                         <p>
-                            Mittlerweile haben wir über 40 Episoden aufgenommen, hunderte von Nachrichten bekommen 
+                            Mittlerweile haben wir über ein Jahr gepodcastet, viele Nachrichten von unseren Hörer*innen bekommen 
                             und eine wunderbare Community aufgebaut. Aber wisst ihr was? Wir fangen gerade erst an.
                         </p>
                         <p>
@@ -190,10 +195,9 @@
                         <div class="blog-share">
                             <h4>Artikel teilen:</h4>
                             <div class="share-buttons">
-                                <a href="#" class="share-btn">📘 Facebook</a>
-                                <a href="#" class="share-btn">🐦 Twitter</a>
-                                <a href="#" class="share-btn">📷 Instagram</a>
-                                <a href="#" class="share-btn">📧 Email</a>
+                                <a href="https://www.facebook.com/profile.php?id=61576907607662" class="share-btn">📘 Facebook</a>
+                                <a href="https://www.instagram.com/podcast.deinernst/" class="share-btn">📷 Instagram</a>
+                                <a href="#" class="share-btn" onclick="shareViaEmail(event)">📧 Email</a> class="share-btn">📧 Email</a>
                             </div>
                         </div>
 
@@ -206,12 +210,11 @@
                         <div class="sidebar-widget">
                             <h3>Über die Autorin</h3>
                             <div class="author-box">
-                                <img src="logo.png" alt="Author" class="author-avatar">
-                                <h4>Host Name</h4>
+                                <img src="images/logo.png" alt="Author" class="author-avatar">
+                                <h4>Miri</h4>
                                 <p>Co-Host von "Dein Ernst?!" und leidenschaftliche Storytellerin.</p>
                                 <div class="author-socials">
-                                    <a href="#">📷</a>
-                                    <a href="#">🐦</a>
+                                    <a href="https://www.instagram.com/miri.on.air/">📷</a>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +274,7 @@
                     
                     <article class="related-post-card">
                         <div class="related-post-image">
-                            <img src="logo.png" alt="Related Post">
+                            <img src="images/logo.png" alt="Related Post">
                             <span class="related-category">Behind the Scenes</span>
                         </div>
                         <div class="related-post-content">
@@ -283,7 +286,7 @@
 
                     <article class="related-post-card">
                         <div class="related-post-image">
-                            <img src="logo.png" alt="Related Post">
+                            <img src="images/logo.png" alt="Related Post">
                             <span class="related-category">Tipps & Tricks</span>
                         </div>
                         <div class="related-post-content">
@@ -295,7 +298,7 @@
 
                     <article class="related-post-card">
                         <div class="related-post-image">
-                            <img src="logo.png" alt="Related Post">
+                            <img src="images/logo.png" alt="Related Post">
                             <span class="related-category">Community</span>
                         </div>
                         <div class="related-post-content">
@@ -344,7 +347,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                   <a href="index.html"><img src="Logo_DeinErnst.png" alt="Dein Ernst?!" class="footer-logo"></a>
+                   <a href="index.html"><img src="images/Logo_DeinErnst.png" alt="Dein Ernst?!" class="footer-logo"></a>
                     <h3>Dein Ernst?!</h3>
                     <p>Der Podcast, der die Dinge beim Namen nennt</p>
                 </div>
@@ -386,6 +389,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script/script.js"></script>
 </body>
 </html>
