@@ -178,3 +178,22 @@ document.addEventListener('DOMContentLoaded', function() {
 console.log('%cDein Ernst?! 🎙️', 'font-size: 24px; font-weight: bold; color: #FF1493;');
 console.log('%cDer Podcast, der die Dinge beim Namen nennt!', 'font-size: 14px; color: #8B4789;');
 console.log('%cWebsite entwickelt mit ❤️ und Pop-Art-Vibes', 'font-size: 12px; color: #2D8B57;');
+
+
+// Share via Email 
+
+function shareViaEmail(event) {
+    event.preventDefault();
+    
+    // Holt automatisch den Seitentitel
+    const title = document.querySelector('h1').textContent;
+    
+    // Holt automatisch die aktuelle URL
+    const url = window.location.href;
+    
+    // Erstellt den mailto-Link
+    const subject = encodeURIComponent(`Lesenswert: ${title}`);
+    const body = encodeURIComponent(`Ich habe diesen interessanten Artikel gefunden: ${url}`);
+    
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
