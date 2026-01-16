@@ -2467,7 +2467,7 @@ body {
 
 /* Giscus Container Anpassungen */
 .comments-section .giscus {
-    background: white;
+    background: rgba(255,165,0,1);
     padding: 30px;
     border-radius: 20px;
     border: 4px solid var(--primary);
