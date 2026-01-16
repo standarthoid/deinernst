@@ -197,3 +197,29 @@ function shareViaEmail(event) {
     
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
+//Share via Facebook
+
+function shareOnFacebook(event) {
+    event.preventDefault();
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+}
+
+
+//Share Generic
+
+function shareGeneric(event) {
+    event.preventDefault();
+    
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: 'Schau dir das an!',
+            url: window.location.href
+        })
+        .then(() => console.log('Erfolgreich geteilt'))
+        .catch((error) => console.log('Fehler beim Teilen', error));
+    } else {
+        alert('Teilen wird auf diesem Gerät nicht unterstützt');
+    }
+}
