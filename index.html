@@ -169,40 +169,76 @@
         </div>
     </section>
 
-    <section id="newsletter" class="newsletter">
-        <div class="newsletter-decoration">
-            <div class="comic-pow">PENG!</div>
-            <div class="comic-star star-3">★</div>
-        </div>
-        <div class="container">
-            <div class="newsletter-content">
-                <div class="newsletter-text">
-                    <h2>Bleib auf dem Laufenden!</h2>
-                    <p>Erhalte Updates zu neuen Episoden, exklusive Behind-the-Scenes-Inhalte und sei immer up-to-date. Dein Ernst?!</p>
-                </div>
-                <form class="newsletter-form" id="newsletterForm">
-                    <div class="form-group">
-                        <input type="email" 
-                               placeholder="deine@email.de" 
-                               required 
-                               id="emailInput"
-                               class="email-input">
-                        <button type="submit" class="btn-submit">
-                            Abonnieren!
-                        </button>
-                    </div>
-                    <p class="newsletter-privacy">
-                        🔒 Wir respektieren deine Privatsphäre. Kein Spam, versprochen!
-                    </p>
-                </form>
-                <div id="newsletter-success" class="success-message" style="display: none;">
-                    <div class="success-bubble">
-                        ✓ Willkommen an Bord! Check deine E-Mails!
-                    </div>
-                </div>
+ <section id="newsletter" class="newsletter">
+    <div class="newsletter-decoration">
+        <div class="comic-pow">PENG!</div>
+        <div class="comic-star star-3">★</div>
+    </div>
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="newsletter-text">
+                <h2>Bleib auf dem Laufenden!</h2>
+                <p>Erhalte Updates zu neuen Episoden, exklusive Behind-the-Scenes-Inhalte und sei immer up-to-date. Dein Ernst?!</p>
             </div>
+            
+            <!-- Mailchimp Form -->
+            <form action="https://hankemacht.us5.list-manage.com/subscribe/post?u=b109cad8e506620716e8cdb5b&amp;id=572e06c58b&amp;f_id=0075bcedf0" 
+                  method="post" 
+                  id="mc-embedded-subscribe-form" 
+                  name="mc-embedded-subscribe-form" 
+                  class="newsletter-form validate" 
+                  target="_blank" 
+                  novalidate>
+                
+                <div class="form-group">
+                    <input type="email" 
+                           name="EMAIL"
+                           placeholder="deine@email.de" 
+                           required 
+                           id="mce-EMAIL"
+                           class="email-input required email"
+                           value="">
+                    <button type="submit" 
+                            name="subscribe" 
+                            id="mc-embedded-subscribe"
+                            class="btn-submit">
+                        Abonnieren!
+                    </button>
+                </div>
+                
+                <!-- Mailchimp Response Messages -->
+                <div id="mce-responses">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>
+                
+                <!-- Honeypot (Spam Protection) -->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" 
+                           name="b_b109cad8e506620716e8cdb5b_572e06c58b" 
+                           tabindex="-1" 
+                           value="">
+                </div>
+                
+                <p class="newsletter-privacy">
+                    🔒 Wir respektieren deine Privatsphäre. Kein Spam, versprochen!
+                </p>
+            </form>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Mailchimp Validation Script -->
+<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+<script type="text/javascript">
+(function($) {
+    window.fnames = new Array(); 
+    window.ftypes = new Array();
+    fnames[0]='EMAIL';
+    ftypes[0]='email';
+}(jQuery));
+var $mcj = jQuery.noConflict(true);
+</script>
 
     <footer class="footer">
         <div class="container">
