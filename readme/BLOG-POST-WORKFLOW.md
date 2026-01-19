@@ -96,7 +96,7 @@ blog-posts/
 
 #### 3.1 Öffne den Generator
 
-**Datei:** `blog-rss-generator.html`
+**Datei:** [standarthoid.github.io/deinernst/](https://standarthoid.github.io/deinernst/rss-feed-generator.html)
 - Doppelklick auf die Datei
 - Öffnet sich im Browser
 
