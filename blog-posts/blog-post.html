@@ -369,6 +369,18 @@
 }(jQuery));
 var $mcj = jQuery.noConflict(true);
 </script>
+<!-- Custom Success Message mit Spam-Hinweis -->
+<script>
+document.getElementById('mc-embedded-subscribe-form').addEventListener('submit', function(e) {
+    setTimeout(function() {
+        var successMsg = document.getElementById('mce-success-response');
+        if (successMsg && successMsg.style.display !== 'none') {
+            successMsg.innerHTML = '✓ Fast geschafft! Check deine E-Mails (auch im Spam-Ordner!) und bestätige deine Anmeldung. 💌';
+        }
+    }, 1000);
+});
+</script>
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
