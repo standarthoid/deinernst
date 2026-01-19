@@ -2023,9 +2023,7 @@ body {
 
 /* Sidebar */
 .blog-sidebar {
-    position: sticky;
-    top: 100px;
-    align-self: start;
+   height: fit-content;
 }
 
 .sidebar-widget {
