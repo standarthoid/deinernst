@@ -207,7 +207,7 @@
         </div>
     </section>
 
-<section id="newsletter" class="newsletter">
+   <section id="newsletter" class="newsletter">
     <div class="newsletter-decoration">
         <div class="comic-pow">PENG!</div>
         <div class="comic-star star-3">★</div>
@@ -276,6 +276,17 @@
     ftypes[0]='email';
 }(jQuery));
 var $mcj = jQuery.noConflict(true);
+</script>
+<!-- Custom Success Message mit Spam-Hinweis -->
+<script>
+document.getElementById('mc-embedded-subscribe-form').addEventListener('submit', function(e) {
+    setTimeout(function() {
+        var successMsg = document.getElementById('mce-success-response');
+        if (successMsg && successMsg.style.display !== 'none') {
+            successMsg.innerHTML = '✓ Fast geschafft! Check deine E-Mails (auch im Spam-Ordner!) und bestätige deine Anmeldung. 💌';
+        }
+    }, 1000);
+});
 </script>
 
 
