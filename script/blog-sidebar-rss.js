@@ -8,7 +8,7 @@
 async function loadBlogPostsFromRSS() {
     try {
         // Deine Blog RSS-Feed URL
-        const RSS_FEED_URL = 'blog-feed.xml'; // Relative URL, wenn im gleichen Verzeichnis
+const RSS_FEED_URL = 'https://standarthoid.github.io/deinernst/blog-feed.xml';
         
         // Lade den RSS-Feed
         let response = await fetch(RSS_FEED_URL);
