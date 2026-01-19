@@ -1,0 +1,20 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "Wie \"Dein Ernst?!\" entstanden ist",
+            "url": "blog-posts/blog-post.html",
+            "date": "2026-01-16",
+            "dateFormatted": "16. Jan 2026",
+            "excerpt": "Die Geschichte hinter unserem Podcast und wie alles begann...",
+        },
+        {
+            "id": 2,
+            "title": "2025 war gar nicht so scheiße, wie es sich angefühlt hat!",
+            "url": "blog-posts/2025warnichtscheisse.html",
+            "date": "2026-01-05",
+            "dateFormatted": "5. Jan 2026",
+            "excerpt": "Wenn man das Weltgeschehen beobachtet, hatte man 2025...",
+        }
+    ]
+}
