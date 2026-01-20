@@ -160,25 +160,17 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
                     </button>
                 ` : ''}
             </div>
-            ${spotifyId ? `
-                <div class="spotify-embed-full">
-                    <iframe style="border-radius:12px" 
-                            src="https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator&theme=0" 
-                            width="100%" 
-                            height="152" 
-                            frameBorder="0" 
-                            allowfullscreen="" 
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                            loading="lazy"></iframe>
-                </div>
-            ` : `
-                <div class="episode-audio">
-                    <audio controls style="width: 100%; margin-top: 15px;">
-                        <source src="${episode.enclosure.link}" type="audio/mpeg">
-                        Dein Browser unterstützt das Audio-Element nicht.
-                    </audio>
-                </div>
-            `}
+            <div class="episode-audio">
+                <audio controls style="width: 100%; margin-top: 15px; border-radius: 12px;">
+                    <source src="${episode.enclosure.link}" type="audio/mpeg">
+                    Dein Browser unterstützt das Audio-Element nicht.
+                </audio>
+                <p style="text-align: center; margin-top: 10px; font-size: 0.9rem; color: #666;">
+                    🎧 Auch auf <a href="https://open.spotify.com/show/${DEIN_ERNST_SHOW_ID}" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
+                    <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
+                    und überall wo es Podcasts gibt!
+                </p>
+            </div>
         </div>
     `;
 }
@@ -248,22 +240,13 @@ function createLatestEpisodeCard(episode, episodeNumber) {
                 </div>
             </div>
             <div class="spotify-player">
-                ${spotifyId ? `
-                    <iframe style="border-radius:12px" 
-                            src="https://open.spotify.com/embed/episode/${spotifyId}?utm_source=generator&theme=0" 
-                            width="100%" 
-                            height="232" 
-                            frameBorder="0" 
-                            allowfullscreen="" 
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                            loading="lazy"></iframe>
-                ` : `
-                    <audio controls style="width: 100%; border-radius: 12px;">
-                        <source src="${episode.enclosure.link}" type="audio/mpeg">
-                        Dein Browser unterstützt das Audio-Element nicht.
-                    </audio>
-                `}
-                <p class="spotify-hint">🎧 Auch auf Spotify, Apple Podcasts & überall wo es Podcasts gibt!</p>
+                <audio controls style="width: 100%; border-radius: 12px;">
+                    <source src="${episode.enclosure.link}" type="audio/mpeg">
+                    Dein Browser unterstützt das Audio-Element nicht.
+                </audio>
+                <p class="spotify-hint">🎧 Auch auf <a href="https://open.spotify.com/show/${DEIN_ERNST_SHOW_ID}" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
+                <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
+                und überall wo es Podcasts gibt!</p>
             </div>
         </div>
     `;
