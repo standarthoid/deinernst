@@ -12,9 +12,25 @@
             "id": 2,
             "title": "2025 war gar nicht so scheiße, wie es sich angefühlt hat!",
             "url": "blog-posts/2025warnichtscheisse.html",
-            "date": "2026-01-05",
-            "dateFormatted": "5. Jan 2026",
+            "date": "2026-01-19",
+            "dateFormatted": "19. Jan 2026",
             "excerpt": "Wenn man das Weltgeschehen beobachtet, hatte man 2025..."
+        },
+         {
+            "id": 3,
+            "title": "Eizellen einfrieren - Zwischen Eiszeit und Aufbruch",
+            "url": "blog-posts/eizellen-einfrieren.html",
+            "date": "2026-01-20",
+            "dateFormatted": "20. Jan 2026",
+            "excerpt": "Warum Frauen ihre Eizellen einfrieren lassen,..."
+        },
+        {
+            "id": 4,
+            "title": "Female Finanze - Der Uterus als Armutsfaktor",
+            "url": "blog-posts/female-finance-uterus-armutsfaktor.html",
+            "date": "2026-01-20",
+            "dateFormatted": "20. Jan 2026",
+            "excerpt": "Eine Geschichte, die dir zeigt, warum Frauen und Finanzen zusammen noch immer..."
         }
     ]
 }
