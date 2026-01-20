@@ -18,7 +18,7 @@ const MAX_EPISODES = RSS_API_KEY ? 100 : 10;
 // Funktion zum Laden des RSS Feeds
 async function loadPodcastEpisodes() {
     try {
-        console.log('🎵 Lade Podcast-Folgen...');
+        console.log('🎵 Lade Podcast-Episoden...');
         
         // Baue die API-URL
         let apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}`;
@@ -35,11 +35,11 @@ async function loadPodcastEpisodes() {
         const data = await response.json();
         
         if (data.status === 'ok' && data.items && data.items.length > 0) {
-            console.log(`✅ ${data.items.length} Folgen erfolgreich geladen`);
+            console.log(`✅ ${data.items.length} Episoden erfolgreich geladen`);
             
             // Zeige Hinweis, wenn nur 10 Episoden ohne API-Key
             if (!RSS_API_KEY && data.items.length === 10) {
-                console.log(`💡 Tipp: Registriere dich auf rss2json.com für mehr Folgen!`);
+                console.log(`💡 Tipp: Registriere dich auf rss2json.com für mehr Episoden!`);
             }
             
             return data.items;
@@ -49,7 +49,7 @@ async function loadPodcastEpisodes() {
         return [];
         
     } catch (error) {
-        console.error('❌ Fehler beim Laden der Folgen:', error);
+        console.error('❌ Fehler beim Laden der Episoden:', error);
         return [];
     }
 }
@@ -59,11 +59,24 @@ const DEIN_ERNST_SHOW_ID = '5ziSaDXlfa1JpgyEpP7iw8';
 
 // Funktion zum Extrahieren der Spotify Episode ID aus der Beschreibung
 function extractSpotifyId(description) {
-    // Versuche, Spotify Link aus der Beschreibung zu extrahieren
-    const spotifyMatch = description.match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/);
-    if (spotifyMatch) {
-        return spotifyMatch[1];
+    // Prüfe zuerst, ob ein fremder Podcast-Show-Link in der Beschreibung ist
+    const showMatch = description.match(/open\.spotify\.com\/show\/([a-zA-Z0-9]+)/);
+    
+    if (showMatch) {
+        const showId = showMatch[1];
+        // Wenn es ein fremder Podcast ist, gebe null zurück (ignoriere Episode-Links)
+        if (showId !== DEIN_ERNST_SHOW_ID) {
+            console.log('⚠️ Fremder Podcast-Link erkannt - wird ignoriert:', showId);
+            return null;
+        }
     }
+    
+    // Versuche, Spotify Episode-Link aus der Beschreibung zu extrahieren
+    const episodeMatch = description.match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/);
+    if (episodeMatch) {
+        return episodeMatch[1];
+    }
+    
     return null;
 }
 
@@ -110,7 +123,7 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     tempDiv.innerHTML = episode.description;
     let cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
     
-    // Berechne die Folgennummer: neueste Folge = höchste Nummer
+    // Berechne die Episodennummer: neueste Episode = höchste Nummer
     // Bonusfolgen bekommen keine Nummer
     let episodeNumber = null;
     if (!isBonus) {
@@ -159,20 +172,18 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
                             loading="lazy"></iframe>
                 </div>
             ` : `
-                <div class="spotify-embed-full">
-                    <p style="text-align: center; padding: 20px; background: #FFF8E7; border: 3px solid #FF1493; border-radius: 12px; margin-top: 15px;">
-                        🎧 Diese Folge ist auf 
-                        <a href="https://open.spotify.com/show/${DEIN_ERNST_SHOW_ID}" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
-                        <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
-                        und überall wo es Podcasts gibt verfügbar!
-                    </p>
+                <div class="episode-audio">
+                    <audio controls style="width: 100%; margin-top: 15px;">
+                        <source src="${episode.enclosure.link}" type="audio/mpeg">
+                        Dein Browser unterstützt das Audio-Element nicht.
+                    </audio>
                 </div>
             `}
         </div>
     `;
 }
 
-// Funktion zum Erstellen einer kompakten Folgen-Karte für die Startseite
+// Funktion zum Erstellen einer kompakten Episode-Karte für die Startseite
 function createCompactEpisodeCard(episode, episodeNumber) {
     const spotifyId = extractSpotifyId(episode.description);
     const pubDate = formatDate(episode.pubDate);
@@ -247,12 +258,10 @@ function createLatestEpisodeCard(episode, episodeNumber) {
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                             loading="lazy"></iframe>
                 ` : `
-                    <p style="text-align: center; padding: 20px; background: #FFF8E7; border: 3px solid #FF1493; border-radius: 12px;">
-                        🎧 Diese Episode ist auf 
-                        <a href="https://open.spotify.com/show/${DEIN_ERNST_SHOW_ID}" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
-                        <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
-                        und überall wo es Podcasts gibt verfügbar!
-                    </p>
+                    <audio controls style="width: 100%; border-radius: 12px;">
+                        <source src="${episode.enclosure.link}" type="audio/mpeg">
+                        Dein Browser unterstützt das Audio-Element nicht.
+                    </audio>
                 `}
                 <p class="spotify-hint">🎧 Auch auf Spotify, Apple Podcasts & überall wo es Podcasts gibt!</p>
             </div>
