@@ -42,6 +42,9 @@
     <section class="episodes-list-page">
         <div class="container">
             
+            <!-- HINWEIS: Diese statischen Episoden werden automatisch durch das rss-feed.js Script ersetzt -->
+            <!-- Sie dienen nur als Fallback, falls JavaScript nicht geladen werden kann -->
+            
             <!-- Episode 42 -->
             <div class="episode-full-card">
                 <div class="episode-header-row">
@@ -52,11 +55,13 @@
                     <span class="episode-date-large">📅 15. Januar 2026</span>
                 </div>
                 <h3>Titel deiner neuesten Episode</h3>
-                <p class="episode-description-full">
-                    Hier kommt die vollständige Beschreibung der Episode. Was habt ihr besprochen? 
-                    Welche Gäste waren dabei? Was sind die Highlights? Schreibe hier einen ansprechenden 
-                    Text, der die Hörer neugierig macht und zum Einschalten animiert. Dein Ernst?!
-                </p>
+                <div class="episode-description-wrapper">
+                    <p class="episode-description-full" data-full-text="Hier kommt die vollständige Beschreibung der Episode. Was habt ihr besprochen? Welche Gäste waren dabei? Was sind die Highlights? Schreibe hier einen ansprechenden Text, der die Hörer neugierig macht und zum Einschalten animiert. Dein Ernst?!">
+                        Hier kommt die vollständige Beschreibung der Episode. Was habt ihr besprochen? 
+                        Welche Gäste waren dabei? Was sind die Highlights? Schreibe hier einen ansprechenden 
+                        Text, der die Hörer neugierig macht und zum Einschalten animiert. Dein Ernst?!
+                    </p>
+                </div>
                 <div class="episode-tags-row">
                     <span class="tag">Gesellschaft</span>
                     <span class="tag">Diskussion</span>
