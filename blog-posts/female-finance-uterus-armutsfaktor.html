@@ -234,54 +234,73 @@
 </section>
                  
                     </div>
+                            
+                    <div class="blog-cta-box">
+                            <h3>🎧 Hör dir unsere neueste Episode an!</h3>
+                            <p>Erlebe selbst, worum es bei "Dein Ernst?!" geht</p>
+                            <a href="episoden.html" class="cta-button">Zu den Episoden</a>
+                     </div>
 
-                    <!-- Sidebar -->
-                    <aside class="blog-sidebar">
-                        
-                        <!-- Über den Podcast -->
-                        <div class="sidebar-section">
-                            <h3>Über Dein Ernst?!</h3>
-                            <p>Wir sind Marlene und Miriam – zwei weise Frauen aus Akademikerinnen-Familien, die genauer hinschauen wollen.</p>
-                            <a href="../ueber-uns.html" class="sidebar-link">Mehr über uns →</a>
-                        </div>
-
-                        <!-- Neueste Episoden -->
-                        <div class="sidebar-section">
-                            <h3>Neueste Episoden</h3>
-                            <div id="latest-episodes-sidebar">
-                                <p>Lädt...</p>
-                            </div>
-                        </div>
-
-                        <!-- Tags -->
+                     <!-- Tags -->
                         <div class="sidebar-section">
                             <h3>Themen</h3>
                             <div class="tag-cloud">
-                                <a href="#" class="tag">#Feminismus</a>
                                 <a href="#" class="tag">#Finanzen</a>
-                                <a href="#" class="tag">#Gleichberechtigung</a>
-                                <a href="#" class="tag">#Patriarchat</a>
                                 <a href="#" class="tag">#FemaleFinance</a>
                                 <a href="#" class="tag">#GenderPayGap</a>
                                 <a href="#" class="tag">#Altersvorsorge</a>
                             </div>
                         </div>
-
-                        <!-- Social Media -->
-                        <div class="sidebar-section">
-                            <h3>Folge uns</h3>
-                            <div class="sidebar-social">
-                                <a href="https://www.instagram.com/podcast.deinernst/" class="social-button">📷 Instagram</a>
-                                <a href="https://www.facebook.com/profile.php?id=61576907607662" class="social-button">📘 Facebook</a>
-                                <a href="https://www.youtube.com/@DeinErnstPodcast" class="social-button">📺 YouTube</a>
+                    
+                       <!-- Share Buttons -->
+                        <div class="blog-share">
+                            <h4>Artikel teilen:</h4>
+                            <div class="share-buttons">
+                                <a href="#" class="share-btn" onclick="shareOnFacebook(event)">📘 Facebook</a>
+                               <a href="#" class="share-btn" onclick="shareGeneric(event)">📤 Teilen</a>
+                                <a href="#" class="share-btn" onclick="shareViaEmail(event)">📧 Email</a> 
                             </div>
                         </div>
 
+                    <!-- Sidebar -->
+                    <aside class="blog-sidebar">
+                        
+                        <!-- Über die Autorin -->
+                        <div class="sidebar-widget">
+                            <h3>Über die Autorin</h3>
+                            <div class="author-box">
+                                <img src="../images/Miri.png" alt="Author" class="author-avatar">
+                                <h4>Miriam</h4>
+                                <p>Co-Host von "Dein Ernst?!" und leidenschaftliche Storytellerin.</p>
+                                <div class="author-socials">
+                                    <a href="https://www.instagram.com/miri.on.air/">📷</a>
+                                </div>
+                            </div>
+                        </div>
                     </aside>
+                        <!-- Neueste Episoden -->
+                       <aside class="blog-sidebar">
+    <div class="sidebar-widget latest-episodes">
+        <h3>🎧 Neueste Episoden</h3>
+        <div class="sidebar-episodes">
+            <div class="loading">Lade Episoden...</div>
+        </div>
+    </div>
+</aside>
 
+                        <!-- Beliebte Posts -->
+                       <div class="sidebar-widget popular-posts">  <!-- "popular-posts" hinzugefügt! -->
+    <h3>📌 Beliebte Posts</h3>
+    <div class="sidebar-posts">  <!-- "sidebar-posts" (mit s!) als Container -->
+        <!-- Lösche den manuellen Inhalt oder lass einen Loading-Text -->
+        <div class="loading">Lade Posts...</div>
+    </div>
+</div>
                 </div>
             </div>
         </div>
+    </article>
+
 
         <!-- Related Posts Section -->
         <section class="related-posts">
