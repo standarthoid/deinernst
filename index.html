@@ -6,6 +6,28 @@
     <title>Dein Ernst?! - Der Podcast</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="icon" type="image/png" href="images/logo.png">
+    <style>
+        /* Klickbare Episode-Karten */
+        .episode-item-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .episode-item {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .episode-item-link:hover .episode-item {
+            transform: translateY(-5px);
+        }
+        
+        .episode-item-link:hover .play-overlay {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -128,42 +150,49 @@
                 <a href="episoden.html" class="btn-link">Alle ansehen →</a>
             </div>
             <div class="episodes-grid">
-                <div class="episode-item">
-                    <div class="episode-thumbnail">
-                        <img src="images/logo.png" alt="Episode">
-                        <div class="play-overlay">▶</div>
+                <!-- Diese werden automatisch durch RSS-Feed ersetzt -->
+                <a href="episoden.html" class="episode-item-link">
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">
+                            <img src="images/logo.png" alt="Episode">
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-num">#41</span>
+                            <h4>Episode Titel hier</h4>
+                            <p>Kurze Beschreibung der Episode...</p>
+                            <span class="episode-date">8. Januar 2026</span>
+                        </div>
                     </div>
-                    <div class="episode-details">
-                        <span class="episode-num">#41</span>
-                        <h4>Episode Titel hier</h4>
-                        <p>Kurze Beschreibung der Episode...</p>
-                        <span class="episode-date">8. Januar 2026</span>
+                </a>
+                <a href="episoden.html" class="episode-item-link">
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">
+                            <img src="images/logo.png" alt="Episode">
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-num">#40</span>
+                            <h4>Episode Titel hier</h4>
+                            <p>Kurze Beschreibung der Episode...</p>
+                            <span class="episode-date">1. Januar 2026</span>
+                        </div>
                     </div>
-                </div>
-                <div class="episode-item">
-                    <div class="episode-thumbnail">
-                        <img src="images/logo.png" alt="Episode">
-                        <div class="play-overlay">▶</div>
+                </a>
+                <a href="episoden.html" class="episode-item-link">
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">
+                            <img src="images/logo.png" alt="Episode">
+                            <div class="play-overlay">▶</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-num">#39</span>
+                            <h4>Episode Titel hier</h4>
+                            <p>Kurze Beschreibung der Episode...</p>
+                            <span class="episode-date">25. Dezember 2025</span>
+                        </div>
                     </div>
-                    <div class="episode-details">
-                        <span class="episode-num">#40</span>
-                        <h4>Episode Titel hier</h4>
-                        <p>Kurze Beschreibung der Episode...</p>
-                        <span class="episode-date">1. Januar 2026</span>
-                    </div>
-                </div>
-                <div class="episode-item">
-                    <div class="episode-thumbnail">
-                        <img src="images/logo.png" alt="Episode">
-                        <div class="play-overlay">▶</div>
-                    </div>
-                    <div class="episode-details">
-                        <span class="episode-num">#39</span>
-                        <h4>Episode Titel hier</h4>
-                        <p>Kurze Beschreibung der Episode...</p>
-                        <span class="episode-date">25. Dezember 2025</span>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
