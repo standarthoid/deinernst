@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Card Test</title>
+    <style>
+        :root {
+            --light-cream: #FFF8E7;
+            --comic-black: #000;
+            --shadow: rgba(0,0,0,0.2);
+        }
+        
+        body {
+            padding: 50px;
+            background: #f0f0f0;
+        }
+        
+        .blog-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            max-width: 400px;
+        }
+        
+        .blog-card {
+            background: var(--light-cream);
+            border: 4px solid var(--comic-black);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--shadow);
+            padding: 20px;
+        }
+        
+        .blog-card:hover,
+        .blog-card-link:hover .blog-card,
+        a.blog-card-link:hover .blog-card {
+            transform: translateY(-10px) !important;
+            box-shadow: 8px 8px 0 var(--shadow) !important;
+        }
+        
+        h3 {
+            margin: 0 0 10px 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        p {
+            margin: 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blog Card Hover Test</h1>
+    <p>Bewege die Maus über die Karte - sie sollte sich nach oben bewegen:</p>
+    <br><br>
+    
+    <a href="#" class="blog-card-link">
+        <article class="blog-card">
+            <h3>Test Blog Post</h3>
+            <p>Diese Karte sollte sich beim Hover um 10px nach oben bewegen und einen größeren Schatten bekommen.</p>
+        </article>
+    </a>
+    
+    <br><br>
+    <p><strong>Was sollte passieren:</strong></p>
+    <ul>
+        <li>✅ Karte bewegt sich 10px nach oben</li>
+        <li>✅ Schatten wird größer (8px statt 6px)</li>
+        <li>✅ Smooth Animation (0.3s)</li>
+    </ul>
+    
+</body>
+</html>
