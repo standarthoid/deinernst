@@ -3,20 +3,28 @@
     <channel>
         <title>Dein Ernst?! - Blog</title>
         <link>https://standarthoid.github.io/deinernst/blog.html</link>
-        <description>Feministische Alltagsgeschichten – deine besten Feminismus-Freundinnen!</description>
+        <description>Feministische Alltagsgeschichten – deine besten Feminismusfreundinnen</description>
         <language>de-DE</language>
         <copyright>2026 Dein Ernst?! - Blog</copyright>
         <managingEditor>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</managingEditor>
         <webMaster>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</webMaster>
-        <lastBuildDate>Mon, 19 Jan 2026 09:48:20 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 20 Jan 2026 11:20:17 GMT</lastBuildDate>
         <atom:link href="https://standarthoid.github.io/deinernst/blog-feed.xml" rel="self" type="application/rss+xml" />
         
         <item>
-            <title>Wie &quot;Dein Ernst?!&quot; entstanden ist</title>
-            <link>https://standarthoid.github.io/deinernst/blog-posts/blog-post.html</link>
-            <guid isPermaLink="true">https://standarthoid.github.io/deinernst/blog-posts/blog-post.html</guid>
-            <description>Die Geschichte hinter unserem Podcast und wie alles begann...</description>
-            <pubDate>Fri, 16 Jan 2026 00:00:00 GMT</pubDate>
+            <title>Eizellen einfrieren - Zwischen Eiszeit und Aufbruch</title>
+            <link>https://standarthoid.github.io/deinernst/blog-posts/eizellen-einfrieren.html</link>
+            <guid isPermaLink="true">https://standarthoid.github.io/deinernst/blog-posts/eizellen-einfrieren.html</guid>
+            <description>Warum Frauen ihre Eizellen einfrieren lassen,...</description>
+            <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
+            <author>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</author>
+        </item>
+        <item>
+            <title>Female Finanze - Der Uterus als Armutsfaktor</title>
+            <link>https://standarthoid.github.io/deinernst/blog-posts/female-finance-uterus-armutsfaktor.html</link>
+            <guid isPermaLink="true">https://standarthoid.github.io/deinernst/blog-posts/female-finance-uterus-armutsfaktor.html</guid>
+            <description>Eine Geschichte, die dir zeigt, warum Frauen und Finanzen zusammen noch immer...</description>
+            <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
             <author>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</author>
         </item>
         <item>
@@ -24,7 +32,15 @@
             <link>https://standarthoid.github.io/deinernst/blog-posts/2025warnichtscheisse.html</link>
             <guid isPermaLink="true">https://standarthoid.github.io/deinernst/blog-posts/2025warnichtscheisse.html</guid>
             <description>Wenn man das Weltgeschehen beobachtet, hatte man 2025...</description>
-            <pubDate>Mon, 05 Jan 2026 00:00:00 GMT</pubDate>
+            <pubDate>Mon, 19 Jan 2026 00:00:00 GMT</pubDate>
+            <author>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</author>
+        </item>
+        <item>
+            <title>Wie &quot;Dein Ernst?!&quot; entstanden ist</title>
+            <link>https://standarthoid.github.io/deinernst/blog-posts/blog-post.html</link>
+            <guid isPermaLink="true">https://standarthoid.github.io/deinernst/blog-posts/blog-post.html</guid>
+            <description>Die Geschichte hinter unserem Podcast und wie alles begann...</description>
+            <pubDate>Fri, 16 Jan 2026 00:00:00 GMT</pubDate>
             <author>podcast.dein.ernst@gmail.com (Dein Ernst?! Team)</author>
         </item>
     </channel>
