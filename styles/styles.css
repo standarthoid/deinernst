@@ -931,12 +931,28 @@ body {
 
 .social-icon {
     font-size: 2rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
     display: inline-block;
+    color: #fff;
 }
 
 .social-icon:hover {
     transform: scale(1.2);
+}
+
+/* Instagram Gradient Hover */
+.social-icon:has(.fa-instagram):hover {
+    color: #E1306C;
+}
+
+/* Facebook Blue Hover */
+.social-icon:has(.fa-facebook):hover {
+    color: #1877F2;
+}
+
+/* YouTube Red Hover */
+.social-icon:has(.fa-youtube):hover {
+    color: #FF0000;
 }
 
 .footer-bottom {
