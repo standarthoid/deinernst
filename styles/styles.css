@@ -1234,6 +1234,12 @@ body {
     gap: 40px;
 }
 
+.blog-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .blog-card {
     background: var(--light-cream);
     border: 4px solid var(--comic-black);
@@ -1244,8 +1250,9 @@ body {
     box-shadow: 6px 6px 0 var(--shadow);
 }
 
-.blog-card:hover {
-    transform: translateY(-5px);
+.blog-card:hover,
+.blog-card-link:hover .blog-card {
+    transform: translateY(-10px);
     box-shadow: 8px 8px 0 var(--shadow);
 }
 
