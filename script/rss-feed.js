@@ -18,7 +18,7 @@ const MAX_EPISODES = RSS_API_KEY ? 100 : 10;
 // Funktion zum Laden des RSS Feeds
 async function loadPodcastEpisodes() {
     try {
-        console.log('🎵 Lade Podcast-Episoden...');
+        console.log('🎵 Lade Podcast-Folgen...');
         
         // Baue die API-URL
         let apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEED_URL)}`;
@@ -35,11 +35,11 @@ async function loadPodcastEpisodes() {
         const data = await response.json();
         
         if (data.status === 'ok' && data.items && data.items.length > 0) {
-            console.log(`✅ ${data.items.length} Episoden erfolgreich geladen`);
+            console.log(`✅ ${data.items.length} Folgen erfolgreich geladen`);
             
             // Zeige Hinweis, wenn nur 10 Episoden ohne API-Key
             if (!RSS_API_KEY && data.items.length === 10) {
-                console.log(`💡 Tipp: Registriere dich auf rss2json.com für mehr Episoden!`);
+                console.log(`💡 Tipp: Registriere dich auf rss2json.com für mehr Folgen!`);
             }
             
             return data.items;
@@ -49,7 +49,7 @@ async function loadPodcastEpisodes() {
         return [];
         
     } catch (error) {
-        console.error('❌ Fehler beim Laden der Episoden:', error);
+        console.error('❌ Fehler beim Laden der Folgen:', error);
         return [];
     }
 }
@@ -110,7 +110,7 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     tempDiv.innerHTML = episode.description;
     let cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
     
-    // Berechne die Episodennummer: neueste Episode = höchste Nummer
+    // Berechne die Folgennummer: neueste Folge = höchste Nummer
     // Bonusfolgen bekommen keine Nummer
     let episodeNumber = null;
     if (!isBonus) {
@@ -130,7 +130,7 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
                     ${index === 0 ? '<span class="episode-badge-neu">NEU</span>' : ''}
                     ${isBonus 
                         ? `<span class="episode-badge-bonus">${getBonusLabel(episode.title)}</span>`
-                        : `<span class="episode-number-large">Episode #${episodeNumber}</span>`
+                        : `<span class="episode-number-large">Folge #${episodeNumber}</span>`
                     }
                 </div>
                 <span class="episode-date-large">📅 ${pubDate}</span>
@@ -161,7 +161,7 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
             ` : `
                 <div class="spotify-embed-full">
                     <p style="text-align: center; padding: 20px; background: #FFF8E7; border: 3px solid #FF1493; border-radius: 12px; margin-top: 15px;">
-                        🎧 Diese Episode ist auf 
+                        🎧 Diese Folge ist auf 
                         <a href="https://open.spotify.com/show/${DEIN_ERNST_SHOW_ID}" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
                         <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
                         und überall wo es Podcasts gibt verfügbar!
@@ -172,7 +172,7 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     `;
 }
 
-// Funktion zum Erstellen einer kompakten Episode-Karte für die Startseite
+// Funktion zum Erstellen einer kompakten Folgen-Karte für die Startseite
 function createCompactEpisodeCard(episode, episodeNumber) {
     const spotifyId = extractSpotifyId(episode.description);
     const pubDate = formatDate(episode.pubDate);
@@ -218,7 +218,7 @@ function createLatestEpisodeCard(episode, episodeNumber) {
                 <span class="episode-badge">NEU</span>
                 ${isBonus 
                     ? `<span class="episode-number">${getBonusLabel(episode.title)}</span>`
-                    : `<span class="episode-number">Episode #${episodeNumber}</span>`
+                    : `<span class="episode-number">Folge #${episodeNumber}</span>`
                 }
                 <h3>${episode.title}</h3>
                 <div class="episode-description-wrapper">
@@ -234,7 +234,6 @@ function createLatestEpisodeCard(episode, episodeNumber) {
                 </div>
                 <div class="episode-meta">
                     <span class="meta-item">📅 ${pubDate}</span>
-                    <span class="meta-item">⏱️ ${episode.itunes?.duration || 'N/A'}</span>
                 </div>
             </div>
             <div class="spotify-player">
