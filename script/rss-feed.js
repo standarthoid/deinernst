@@ -112,6 +112,16 @@ function formatDate(dateString) {
     return date.toLocaleDateString('de-DE', options);
 }
 
+// Funktion zum Mischen eines Arrays (Fisher-Yates Shuffle)
+function shuffleArray(array) {
+    const shuffled = [...array]; // Kopie erstellen
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 // Funktion zum Erstellen der Episode-Karte
 function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     const spotifyId = extractSpotifyId(episode.description);
@@ -182,21 +192,23 @@ function createCompactEpisodeCard(episode, episodeNumber) {
     const isBonus = isBonusEpisode(episode.title);
     
     return `
-        <div class="episode-item">
-            <div class="episode-thumbnail">
-                <img src="${episode.thumbnail || 'logo.png'}" alt="${episode.title}">
-                <div class="play-overlay">▶</div>
+        <a href="episoden.html" class="episode-item-link">
+            <div class="episode-item">
+                <div class="episode-thumbnail">
+                    <img src="${episode.thumbnail || 'images/logo.png'}" alt="${episode.title}">
+                    <div class="play-overlay">▶</div>
+                </div>
+                <div class="episode-details">
+                    ${isBonus 
+                        ? `<span class="episode-num">${getBonusLabel(episode.title)}</span>`
+                        : `<span class="episode-num">#${episodeNumber}</span>`
+                    }
+                    <h4>${episode.title}</h4>
+                    <p>${episode.description.substring(0, 100)}...</p>
+                    <span class="episode-date">${pubDate}</span>
+                </div>
             </div>
-            <div class="episode-details">
-                ${isBonus 
-                    ? `<span class="episode-num">${getBonusLabel(episode.title)}</span>`
-                    : `<span class="episode-num">#${episodeNumber}</span>`
-                }
-                <h4>${episode.title}</h4>
-                <p>${episode.description.substring(0, 100)}...</p>
-                <span class="episode-date">${pubDate}</span>
-            </div>
-        </div>
+        </a>
     `;
 }
 
@@ -398,25 +410,32 @@ async function displayRecentEpisodes() {
     
     if (episodes.length === 0) return;
     
-    // Zeige die Episoden 2-4 (überspringt die neueste, die bereits oben angezeigt wird)
-    const recentEpisodes = episodes.slice(1, 4);
+    // Entferne die neueste Episode (die wird schon oben angezeigt)
+    const availableEpisodes = episodes.slice(1);
     
-    // Zähle reguläre Episoden für die richtige Nummerierung
-    let regularEpisodeCount = episodes.filter(ep => !isBonusEpisode(ep.title)).length;
+    // Wenn weniger als 3 Episoden verfügbar sind, zeige alle
+    if (availableEpisodes.length === 0) return;
     
-    // Reduziere um 1, falls die erste Episode regulär war
-    if (!isBonusEpisode(episodes[0].title)) {
-        regularEpisodeCount--;
-    }
+    // Mische die verfügbaren Episoden zufällig
+    const shuffledEpisodes = shuffleArray(availableEpisodes);
     
-    const episodesHTML = recentEpisodes.map((episode) => {
-        const currentNumber = regularEpisodeCount;
-        const html = createCompactEpisodeCard(episode, currentNumber);
-        // Reduziere nur für reguläre Episoden
-        if (!isBonusEpisode(episode.title)) {
-            regularEpisodeCount--;
-        }
-        return html;
+    // Nimm die ersten 3 (oder weniger, falls nicht genug vorhanden)
+    const randomEpisodes = shuffledEpisodes.slice(0, 3);
+    
+    // Erstelle die Episode-Karten mit korrekten Nummern
+    const episodesHTML = randomEpisodes.map((episode) => {
+        // Finde den originalen Index der Episode im vollständigen Array
+        const originalIndex = episodes.findIndex(ep => ep.guid === episode.guid);
+        
+        // Zähle reguläre Episoden bis zu diesem Index für die korrekte Nummer
+        const episodesBeforeThis = episodes.slice(0, originalIndex);
+        const regularEpisodesBeforeThis = episodesBeforeThis.filter(ep => !isBonusEpisode(ep.title)).length;
+        const totalRegularEpisodes = episodes.filter(ep => !isBonusEpisode(ep.title)).length;
+        
+        // Berechne die Episodennummer
+        const episodeNumber = totalRegularEpisodes - regularEpisodesBeforeThis;
+        
+        return createCompactEpisodeCard(episode, episodeNumber);
     }).join('');
     
     container.innerHTML = episodesHTML;
@@ -471,6 +490,22 @@ style.textContent = `
         box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
         display: inline-block;
         letter-spacing: 0.5px;
+    }
+    
+    /* Klickbare Episode-Karten */
+    .episode-item-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .episode-item-link:hover .episode-item {
+        transform: translateY(-5px);
+    }
+    
+    .episode-item-link:hover .play-overlay {
+        opacity: 1;
+        transform: scale(1.1);
     }
     
     /* Ausklappbare Beschreibung */
