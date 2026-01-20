@@ -27,6 +27,94 @@
             opacity: 1;
             transform: scale(1.1);
         }
+        
+        /* Episode-Modal */
+        #episode-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            border: 5px solid #000;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FF1493;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            transform: rotate(90deg) scale(1.2);
+        }
+        
+        .modal-episode-info {
+            margin-bottom: 25px;
+        }
+        
+        .modal-episode-number {
+            color: #FF1493;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .modal-episode-title {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #000;
+        }
+        
+        .modal-episode-date {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .modal-audio-player {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -151,7 +239,7 @@
             </div>
             <div class="episodes-grid">
                 <!-- Diese werden automatisch durch RSS-Feed ersetzt -->
-                <a href="episoden.html" class="episode-item-link">
+                <div class="episode-item-link" onclick="window.location.href='episoden.html'">
                     <div class="episode-item">
                         <div class="episode-thumbnail">
                             <img src="images/logo.png" alt="Episode">
@@ -164,8 +252,8 @@
                             <span class="episode-date">8. Januar 2026</span>
                         </div>
                     </div>
-                </a>
-                <a href="episoden.html" class="episode-item-link">
+                </div>
+                <div class="episode-item-link" onclick="window.location.href='episoden.html'">
                     <div class="episode-item">
                         <div class="episode-thumbnail">
                             <img src="images/logo.png" alt="Episode">
@@ -178,8 +266,8 @@
                             <span class="episode-date">1. Januar 2026</span>
                         </div>
                     </div>
-                </a>
-                <a href="episoden.html" class="episode-item-link">
+                </div>
+                <div class="episode-item-link" onclick="window.location.href='episoden.html'">
                     <div class="episode-item">
                         <div class="episode-thumbnail">
                             <img src="images/logo.png" alt="Episode">
@@ -192,7 +280,7 @@
                             <span class="episode-date">25. Dezember 2025</span>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </section>
@@ -327,5 +415,26 @@ document.getElementById('mc-embedded-subscribe-form').addEventListener('submit',
 
     <script src="script/rss-feed.js"></script>
     <script src="script/script.js"></script>
+
+    <!-- Episode Player Modal -->
+    <div id="episode-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeEpisodeModal()">×</button>
+            <div class="modal-episode-info">
+                <div class="modal-episode-number" id="modal-episode-number">Folge #42</div>
+                <h2 class="modal-episode-title" id="modal-episode-title">Episode Titel</h2>
+                <div class="modal-episode-date" id="modal-episode-date">📅 15. Januar 2026</div>
+            </div>
+            <audio controls class="modal-audio-player" id="modal-audio-player">
+                <source id="modal-audio-source" src="" type="audio/mpeg">
+                Dein Browser unterstützt das Audio-Element nicht.
+            </audio>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #666;">
+                🎧 Auch auf <a href="https://open.spotify.com/show/5ziSaDXlfa1JpgyEpP7iw8" target="_blank" style="color: #FF1493; font-weight: bold;">Spotify</a>, 
+                <a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank" style="color: #FF1493; font-weight: bold;">Apple Podcasts</a> 
+                und überall wo es Podcasts gibt!
+            </p>
+        </div>
+    </div>
 </body>
 </html>
