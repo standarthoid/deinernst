@@ -191,8 +191,12 @@ function createCompactEpisodeCard(episode, episodeNumber) {
     const pubDate = formatDate(episode.pubDate);
     const isBonus = isBonusEpisode(episode.title);
     
+    // Escape Apostrophe für die Verwendung in Attributen
+    const safeTitle = episode.title.replace(/'/g, "\\'");
+    const safeDate = pubDate.replace(/'/g, "\\'");
+    
     return `
-        <a href="episoden.html" class="episode-item-link">
+        <div class="episode-item-link" onclick="openEpisodeModal('${episode.enclosure.link}', '${safeTitle}', '${safeDate}', ${episodeNumber}, ${isBonus})">
             <div class="episode-item">
                 <div class="episode-thumbnail">
                     <img src="${episode.thumbnail || 'images/logo.png'}" alt="${episode.title}">
@@ -208,7 +212,7 @@ function createCompactEpisodeCard(episode, episodeNumber) {
                     <span class="episode-date">${pubDate}</span>
                 </div>
             </div>
-        </a>
+        </div>
     `;
 }
 
@@ -577,6 +581,51 @@ window.toggleDescription = function(button) {
         descriptionElement.textContent = fullText;
         toggleText.textContent = 'Weniger anzeigen';
         button.classList.add('expanded');
+    }
+};
+
+// Funktion zum Öffnen des Episode-Modals
+window.openEpisodeModal = function(audioUrl, title, date, episodeNumber, isBonus) {
+    const modal = document.getElementById('episode-modal');
+    const modalTitle = document.getElementById('modal-episode-title');
+    const modalNumber = document.getElementById('modal-episode-number');
+    const modalDate = document.getElementById('modal-episode-date');
+    const modalAudio = document.getElementById('modal-audio-source');
+    const audioPlayer = document.getElementById('modal-audio-player');
+    
+    // Setze Episode-Informationen
+    modalTitle.textContent = title;
+    modalNumber.textContent = isBonus ? '' : `Folge #${episodeNumber}`;
+    modalDate.textContent = `📅 ${date}`;
+    
+    // Setze Audio-Quelle
+    modalAudio.src = audioUrl;
+    audioPlayer.load();
+    
+    // Zeige Modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Verhindere Scrollen im Hintergrund
+};
+
+// Funktion zum Schließen des Episode-Modals
+window.closeEpisodeModal = function() {
+    const modal = document.getElementById('episode-modal');
+    const audioPlayer = document.getElementById('modal-audio-player');
+    
+    // Stoppe Audio
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    
+    // Verstecke Modal
+    modal.style.display = 'none';
+    document.body.style.overflow = ''; // Erlaube Scrollen wieder
+};
+
+// Schließe Modal bei Klick außerhalb
+window.onclick = function(event) {
+    const modal = document.getElementById('episode-modal');
+    if (event.target === modal) {
+        closeEpisodeModal();
     }
 };
 
