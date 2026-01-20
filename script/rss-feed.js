@@ -122,6 +122,43 @@ function shuffleArray(array) {
     return shuffled;
 }
 
+// Funktion zum Entfernen von Metadaten aus der Beschreibung
+function cleanDescriptionMetadata(description) {
+    // Liste der Keywords, bei denen die Beschreibung abgeschnitten werden soll
+    const metadataKeywords = [
+        'Instagram:',
+        'Quellen:',
+        'Quellen & Links:',
+        'Quellen und Links:',
+        'Zahlen & Fakten:',
+        'Zahlen und Fakten:',
+        'Allein reisen:',
+        'Hilfe gibt\'s unter anderem hier:',
+        'Hilfe gibt es unter anderem hier:',
+        'Links:',
+        'Weiterführende Links:',
+        'Weitere Infos:',
+        'Weitere Informationen:',
+        'Social Media:',
+        'Folgt uns auf:',
+        'Kontakt:',
+        'Shownotes:'
+    ];
+    
+    // Finde das erste Vorkommen eines Keywords
+    let cutoffPosition = description.length;
+    
+    for (const keyword of metadataKeywords) {
+        const position = description.indexOf(keyword);
+        if (position !== -1 && position < cutoffPosition) {
+            cutoffPosition = position;
+        }
+    }
+    
+    // Schneide den Text ab und entferne trailing Whitespace
+    return description.substring(0, cutoffPosition).trim();
+}
+
 // Funktion zum Erstellen der Episode-Karte
 function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     const spotifyId = extractSpotifyId(episode.description);
@@ -132,6 +169,9 @@ function createEpisodeCard(episode, index, totalEpisodes, regularEpisodeCount) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = episode.description;
     let cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Entferne Metadaten (Quellen, Instagram, etc.)
+    cleanDescription = cleanDescriptionMetadata(cleanDescription);
     
     // Berechne die Episodennummer: neueste Episode = höchste Nummer
     // Bonusfolgen bekommen keine Nummer
@@ -191,6 +231,14 @@ function createCompactEpisodeCard(episode, episodeNumber) {
     const pubDate = formatDate(episode.pubDate);
     const isBonus = isBonusEpisode(episode.title);
     
+    // Bereinige die Beschreibung von HTML-Tags
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = episode.description;
+    let cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Entferne Metadaten (Quellen, Instagram, etc.)
+    cleanDescription = cleanDescriptionMetadata(cleanDescription);
+    
     // Escape Apostrophe für die Verwendung in Attributen
     const safeTitle = episode.title.replace(/'/g, "\\'");
     const safeDate = pubDate.replace(/'/g, "\\'");
@@ -208,7 +256,7 @@ function createCompactEpisodeCard(episode, episodeNumber) {
                         : `<span class="episode-num">#${episodeNumber}</span>`
                     }
                     <h4>${episode.title}</h4>
-                    <p>${episode.description.substring(0, 100)}...</p>
+                    <p>${cleanDescription.substring(0, 100)}...</p>
                     <span class="episode-date">${pubDate}</span>
                 </div>
             </div>
@@ -226,6 +274,9 @@ function createLatestEpisodeCard(episode, episodeNumber) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = episode.description;
     let cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Entferne Metadaten (Quellen, Instagram, etc.)
+    cleanDescription = cleanDescriptionMetadata(cleanDescription);
     
     // Prüfe ob Beschreibung länger als 300 Zeichen ist
     const needsToggle = cleanDescription.length > 300;
