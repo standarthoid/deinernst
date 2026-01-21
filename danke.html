@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nachricht erhalten - Dein Ernst?!</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <!-- Font Awesome für Social Media Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .thank-you-section {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+        
+        .thank-you-card {
+            background: var(--light-cream, #FFF8E7);
+            border: 5px solid #000;
+            border-radius: 25px;
+            padding: 60px 40px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.2);
+            position: relative;
+            animation: popIn 0.5s ease;
+        }
+        
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: bounce 1s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .thank-you-card h1 {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 2.5rem;
+            color: #FF1493;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .thank-you-card p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .comic-bubble-success {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            background: #FF1493;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50%;
+            border: 4px solid #000;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.2rem;
+            transform: rotate(15deg);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: #FF1493;
+            color: white;
+            text-decoration: none;
+            border: 4px solid #000;
+            border-radius: 30px;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: #FF69B4;
+            transform: translateY(-3px);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+        }
+        
+        .social-reminder {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 3px dashed #FF1493;
+        }
+        
+        .social-reminder h3 {
+            font-family: 'Arial Black', sans-serif;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .social-icons-inline {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .social-icons-inline a {
+            font-size: 2.5rem;
+            color: #FF1493;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons-inline a:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html"><img src="images/Logo_DeinErnst.png" alt="Dein Ernst?!" class="logo"></a>
+                <a href="index.html"><h1>Dein Ernst?!</h1></a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="episoden.html">Episoden</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="ueber-uns.html">Über uns</a></li>
+                <li><a href="kontakt.html">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="thank-you-card">
+                <div class="comic-bubble-success">WOW!</div>
+                <div class="success-icon">✉️</div>
+                <h1>Danke!</h1>
+                <p><strong>Deine Nachricht ist bei uns angekommen!</strong></p>
+                <p>Wir haben deine Nachricht erhalten und melden uns so schnell wie möglich bei dir.</p>
+                <p>In der Zwischenzeit kannst du gerne:</p>
+                <ul style="list-style: none; padding: 0; margin: 20px 0; line-height: 2;">
+                    <li>🎧 <a href="episoden.html" style="color: #FF1493; font-weight: bold;">Unsere neuesten Episoden anhören</a></li>
+                    <li>📝 <a href="blog.html" style="color: #FF1493; font-weight: bold;">Im Blog stöbern</a></li>
+                    <li>📰 <a href="#newsletter" style="color: #FF1493; font-weight: bold;">Den Newsletter abonnieren</a></li>
+                </ul>
+                
+                <a href="index.html" class="back-button">Zur Startseite</a>
+                
+                <div class="social-reminder">
+                    <h3>Folge uns auf Social Media!</h3>
+                    <div class="social-icons-inline">
+                        <a href="https://www.instagram.com/podcast.deinernst/" target="_blank" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61576907607662" target="_blank" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@DeinErnstPodcast" target="_blank" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                   <a href="index.html"><img src="images/Logo_DeinErnst.png" alt="Dein Ernst?!" class="footer-logo"></a>
+                    <h3>Dein Ernst?!</h3>
+                    <p>Der Podcast, der die Dinge beim Namen nennt</p>
+                </div>
+                    <div class="footer-column">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="episoden.html">Episoden</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="ueber-uns.html">Über uns</a></li>
+                            <li><a href="kontakt.html">Kontakt</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Höre uns auf</h4>
+                        <ul class="platform-links">
+                            <li><a href="https://open.spotify.com/show/5ziSaDXlfa1JpgyEpP7iw8?si=5ad36adf4a374081" target="_blank">🎵 Spotify</a></li>
+                            <li><a href="https://podcasts.apple.com/de/podcast/dein-ernst-alltagsgeschichten-im-patriarchat/id1774912035" target="_blank">🎧 Apple Podcasts</a></li>
+                            <li><a href="https://pca.st/podcast/dd6a5190-7021-013d-bd8d-02e325935ba3" target="_blank">📻 Pocket Casts</a></li>
+                            <li><a href="https://link.deezer.com/s/32aGErbJh04jEEUzF9n9u" target="_blank">💜 Deezer</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Social Media</h4>
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/podcast.deinernst/" class="social-icon" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="https://www.facebook.com/profile.php?id=61576907607662" class="social-icon" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                            <a href="https://www.youtube.com/@DeinErnstPodcast" class="social-icon" aria-label="YouTube">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                        </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dein Ernst?! Podcast. Alle Rechte vorbehalten.</p>
+                <div class="footer-bottom-links">
+                    <a href="impressum.html">Impressum</a>
+                    <a href="datenschutz.html">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script/script.js"></script>
+</body>
+</html>
