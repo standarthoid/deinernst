@@ -3197,7 +3197,7 @@ a.blog-card-link:hover .blog-card {
 
 /* Thank You Bubble (extends speech-bubble) */
 .thank-you-bubble {
-    max-width: 700px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
