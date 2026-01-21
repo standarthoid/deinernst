@@ -2696,12 +2696,11 @@ a.blog-card-link:hover .blog-card {
         }
 
         .contact-info {
-            background: white;
-            padding: 40px;
+            background: var(--light-cream);
+            border: 5px solid var(--comic-black);
             border-radius: 20px;
-            border: 4px solid var(--accent);
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
-            height: fit-content;
+            overflow: hidden;
+            box-shadow: 10px 10px 0 var(--shadow);
         }
 
         .contact-info h2 {
@@ -2871,24 +2870,16 @@ a.blog-card-link:hover .blog-card {
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: black;
-            border: none;
-            padding: 18px 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            width: 100%;
-        }
+             background: var(--accent-pink);
+             color: var(--comic-white);
+             border-radius: 40px;
+             white-space: nowrap;
+              width: 100%;
+         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 0 rgba(0,0,0,0.25);
+            background: var(--primary-purple);
+            transform: scale(1.05);
         }
 
         .submit-btn:active {
