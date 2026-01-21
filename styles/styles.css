@@ -3166,6 +3166,19 @@ a.blog-card-link:hover .blog-card {
     align-items: center;
 }
 
+.danke-logo img {
+    width: 100%;
+    max-width: 350px;
+    border: 5px solid var(--comic-black);
+    border-radius: 20px;
+    box-shadow: 10px 10px 0 var(--shadow);
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+}
+
+.danke-logo img:hover {
+    transform: rotate(0deg) scale(1.05);
+}
 /* Success Icon Large */
 .success-icon-large {
     font-size: 6rem;
