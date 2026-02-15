@@ -4,11 +4,11 @@
 
 /* Shop Hero Section */
 .shop-hero {
-    position: relative;
-    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--accent-magenta) 100%);
+   background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-yellow) 100%);
     padding: 80px 0;
+    position: relative;
     overflow: hidden;
-    border-bottom: 6px solid var(--comic-black);
+    border-bottom: 5px solid var(--comic-black);
 }
 
 .shop-hero-content {
