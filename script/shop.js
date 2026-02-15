@@ -4,7 +4,7 @@
    =================================== */
 
 // WICHTIG: Ersetze diese mit deinen echten Keys
-const STRIPE_PUBLIC_KEY = 'pk_test_DEIN_STRIPE_PUBLIC_KEY'; // Stripe Public Key (live oder test)
+const STRIPE_PUBLIC_KEY = 'pk_test_51T14pW8aXFNCCgSfMiVMfJNwSlTDukgit75loRy65qBfcwEuQqyExjDLxfmVjqaSCGwkWKKMp5cwPfvxXlXVm7qL001ikZgzlJ'; // Stripe Public Key (live oder test)
 const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/DEIN_WEBHOOK'; // Make.com Webhook URL
 
 // Stripe initialisieren
