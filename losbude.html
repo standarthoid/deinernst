@@ -596,20 +596,49 @@
     return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
   }
 
+  // ntfy.sh silently turns a message into a file attachment once the body
+  // passes its plain-text size limit (~4KB) — the viewer then gets "you
+  // received a file" instead of our JSON and can never show anything. So
+  // we broadcast a deliberately compact wire format: short keys, tuples
+  // instead of objects for the many small term/result entries (no repeated
+  // key names), no internal ids or undo bookkeeping, and capped history —
+  // to stay well under that limit even for a long, many-category game.
+  // { n:name, c:[{n:name, t:[[text,drawnFlag], ...]}], r:[{no:number, re:[[categoryName,text], ...]}] }
+  function buildBroadcastPayload(g){
+    return {
+      n: g.name,
+      c: g.categories.map(function(cat){
+        return {
+          n: cat.name,
+          t: cat.terms.map(function(t){ return [t.text, t.drawn ? 1 : 0]; })
+        };
+      }),
+      r: g.rounds.slice(-5).map(function(round){
+        return {
+          no: round.number,
+          re: round.results.map(function(res){ return [res.categoryName, res.text]; })
+        };
+      })
+    };
+  }
+
+  // Broadcasts are fire-and-forget, but several in a row (e.g. quick undo
+  // after a draw) could otherwise race over the network and let an older
+  // state arrive after a newer one. Chaining them through one promise keeps
+  // them in the order they were made, so viewers never flicker backwards.
+  var broadcastChain = Promise.resolve();
+
   function broadcastGame(g){
     try{
-      var payload = JSON.stringify({
-        name: g.name,
-        categories: g.categories,
-        rounds: g.rounds,
-        nextRoundNumber: g.nextRoundNumber,
-        updatedAt: g.updatedAt
+      var payload = JSON.stringify(buildBroadcastPayload(g));
+      var shareId = g.shareId;
+      broadcastChain = broadcastChain.then(function(){
+        return fetch("https://ntfy.sh/" + encodeURIComponent(shareId), {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: payload
+        }).catch(function(){ /* relay unreachable — local play keeps working regardless */ });
       });
-      fetch("https://ntfy.sh/" + encodeURIComponent(g.shareId), {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: payload
-      }).catch(function(){ /* relay unreachable — local play keeps working regardless */ });
     }catch(e){ /* fetch unavailable */ }
   }
 
@@ -954,10 +983,8 @@
     var remaining = cat.terms.filter(function(t){ return !t.drawn; }).length;
     var drawnCount = cat.terms.length - remaining;
     var chips = cat.terms.map(function(t){
-      if(t.drawn){
-        return '<span class="chip chip--drawn"><span>'+esc(t.text)+'</span><span class="chip-round">R'+t.roundDrawn+'</span></span>';
-      }
-      return '<span class="chip"><span>'+esc(t.text)+'</span></span>';
+      var cls = t.drawn ? "chip chip--drawn" : "chip";
+      return '<span class="'+cls+'"><span>'+esc(t.text)+'</span></span>';
     }).join("");
     return (
       '<div class="cat-card">'+
@@ -1047,15 +1074,52 @@
     function isConnected(){ return lastContactAt>0 && (Date.now()-lastContactAt) < 10000; }
     function isStuck(){ return !snapshot && !isConnected() && (Date.now()-startedAt) > 8000; }
 
+    // Turns the compact wire format (short keys, tuples) back into the
+    // {name, categories:[{name,terms:[{text,drawn}]}], rounds:[{number,results:[{categoryName,text}]}]}
+    // shape that renderCategoryCardReadOnly / renderReveal / renderHistory expect.
+    function expandSnapshot(compact){
+      return {
+        name: compact.n,
+        categories: (compact.c||[]).map(function(cat){
+          return {
+            name: cat.n,
+            terms: (cat.t||[]).map(function(pair){ return { text: pair[0], drawn: !!pair[1] }; })
+          };
+        }),
+        rounds: (compact.r||[]).map(function(round){
+          return {
+            number: round.no,
+            results: (round.re||[]).map(function(pair){ return { categoryName: pair[0], text: pair[1] }; })
+          };
+        })
+      };
+    }
+
     function applyMessage(raw){
       try{
         var data = JSON.parse(raw);
-        if(data && Array.isArray(data.categories)){
-          snapshot = data;
+        if(data && Array.isArray(data.c)){
+          snapshot = expandSnapshot(data);
           lastContactAt = Date.now();
           renderViewer();
         }
       }catch(e){ /* ignore anything that isn't a Losbude snapshot */ }
+    }
+
+    // ntfy delivers an oversized message as a file attachment instead of
+    // plain text (message becomes "you received a file …") — if that ever
+    // happens despite the slimmed-down payload we send, fetch the real
+    // content from the attachment URL rather than silently showing nothing.
+    function applyEnvelope(envelope){
+      if(!envelope) return;
+      if(envelope.attachment && envelope.attachment.url){
+        fetch(envelope.attachment.url)
+          .then(function(res){ return res.text(); })
+          .then(applyMessage)
+          .catch(function(){ /* attachment fetch failed — next tick will retry */ });
+      } else if(envelope.message){
+        applyMessage(envelope.message);
+      }
     }
 
     function renderViewer(){
@@ -1120,10 +1184,9 @@
           pollFailures = 0;
           var lines = text.split("\n").filter(Boolean);
           if(lines.length){
-            var last = JSON.parse(lines[lines.length-1]);
-            if(last && last.message){ applyMessage(last.message); return; }
+            applyEnvelope(JSON.parse(lines[lines.length-1]));
           }
-          // reachable, just nothing shared (yet) — still counts as contact
+          // reachable — counts as contact even before an attachment fetch resolves
           lastContactAt = Date.now();
           renderViewer();
         })
@@ -1140,10 +1203,7 @@
       var es = new EventSource("https://ntfy.sh/" + encodeURIComponent(shareId) + "/sse");
       es.onopen = function(){ lastContactAt = Date.now(); renderViewer(); };
       es.addEventListener("message", function(evt){
-        try{
-          var envelope = JSON.parse(evt.data);
-          if(envelope && envelope.message) applyMessage(envelope.message);
-        }catch(e){ /* ignore malformed envelope */ }
+        try{ applyEnvelope(JSON.parse(evt.data)); }catch(e){ /* ignore malformed envelope */ }
       });
     }catch(e){ /* EventSource unavailable in this browser — polling still covers us */ }
   }
