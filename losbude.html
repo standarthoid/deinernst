@@ -443,12 +443,6 @@
     min-height:2.4em;
     display:flex; align-items:center; justify-content:center;
   }
-  .reveal.is-empty{ background:#EFE6D2; }
-  .reveal.is-empty .reveal-term{
-    color:var(--muted); font-style:italic; font-family:var(--font-body);
-    text-transform:none; font-size:0.88rem; font-weight:400;
-  }
-
   /* ---------- Verlauf ---------- */
   .history-list{ display:flex; flex-direction:column; gap:0.55rem; }
   .history-row{
@@ -465,7 +459,6 @@
   }
   .history-item{ color:var(--muted); }
   .history-item b{ color:var(--ink); font-weight:700; }
-  .history-item.empty i{ font-style:italic; }
   .history-sep{ color:#C9BFA8; }
   .history-toggle{ margin-top:0.8rem; font-size:0.82rem; }
 
@@ -653,16 +646,24 @@
     var results = [];
     g.categories.forEach(function(cat){
       if(cat.terms.length===0) return;
+      var prevLastTermId = cat.lastTermId || null;
       var pool = cat.terms.filter(function(t){ return !t.drawn; });
+      var resetSnapshot = null;
       if(pool.length===0){
-        results.push({ categoryId:cat.id, categoryName:cat.name, termId:null, text:null, empty:true });
-      } else {
-        var idx = Math.floor(Math.random()*pool.length);
-        var term = pool[idx];
-        term.drawn = true;
-        term.roundDrawn = g.nextRoundNumber;
-        results.push({ categoryId:cat.id, categoryName:cat.name, termId:term.id, text:term.text, empty:false });
+        // Smaller categories run out first — start a fresh cycle for just this
+        // category so it keeps contributing every round, avoiding an immediate
+        // repeat of the term it just gave out.
+        resetSnapshot = cat.terms.map(function(t){ return { termId:t.id, drawn:t.drawn, roundDrawn:t.roundDrawn }; });
+        cat.terms.forEach(function(t){ t.drawn=false; t.roundDrawn=null; });
+        pool = cat.terms.filter(function(t){ return cat.terms.length===1 || t.id!==prevLastTermId; });
+        if(pool.length===0) pool = cat.terms.slice();
       }
+      var idx = Math.floor(Math.random()*pool.length);
+      var term = pool[idx];
+      term.drawn = true;
+      term.roundDrawn = g.nextRoundNumber;
+      cat.lastTermId = term.id;
+      results.push({ categoryId:cat.id, categoryName:cat.name, termId:term.id, text:term.text, resetSnapshot:resetSnapshot, prevLastTermId:prevLastTermId });
     });
     g.rounds.push({ number: g.nextRoundNumber, timestamp: Date.now(), results: results });
     g.nextRoundNumber++;
@@ -675,10 +676,20 @@
     var round = g.rounds.pop();
     if(!round) return;
     round.results.forEach(function(r){
-      if(!r.termId) return;
       var cat = g.categories.find(function(c){ return c.id===r.categoryId; });
-      var term = cat && cat.terms.find(function(t){ return t.id===r.termId; });
-      if(term){ term.drawn=false; term.roundDrawn=null; }
+      if(!cat) return;
+      if(r.resetSnapshot){
+        // this round auto-started a new cycle for the category — restore
+        // every term to exactly how it was right before that happened
+        r.resetSnapshot.forEach(function(snap){
+          var t = cat.terms.find(function(tt){ return tt.id===snap.termId; });
+          if(t){ t.drawn=snap.drawn; t.roundDrawn=snap.roundDrawn; }
+        });
+      } else if(r.termId){
+        var term = cat.terms.find(function(t){ return t.id===r.termId; });
+        if(term){ term.drawn=false; term.roundDrawn=null; }
+      }
+      cat.lastTermId = r.prevLastTermId || null;
     });
     g.nextRoundNumber = Math.max(1, g.nextRoundNumber-1);
     save();
@@ -687,7 +698,10 @@
 
   function resetDraws(){
     var g = activeGame();
-    g.categories.forEach(function(c){ c.terms.forEach(function(t){ t.drawn=false; t.roundDrawn=null; }); });
+    g.categories.forEach(function(c){
+      c.terms.forEach(function(t){ t.drawn=false; t.roundDrawn=null; });
+      c.lastTermId = null;
+    });
     g.rounds = [];
     g.nextRoundNumber = 1;
     save();
@@ -750,32 +764,24 @@
 
   function renderReveal(r, i){
     var tilt = TILTS[i % TILTS.length];
-    var cls = 'reveal' + (r.empty ? ' is-empty' : '');
-    var term = r.empty ? '— leer —' : esc(r.text);
     var tagColor = TAG_COLORS[i % TAG_COLORS.length];
     return (
-      '<div class="'+cls+'" style="--tilt:'+tilt+'deg">'+
+      '<div class="reveal" style="--tilt:'+tilt+'deg">'+
         '<span class="reveal-tag" style="background:'+tagColor+'">'+esc(r.categoryName)+'</span>'+
-        '<div class="reveal-term">'+term+'</div>'+
+        '<div class="reveal-term">'+esc(r.text)+'</div>'+
       '</div>'
     );
   }
 
   function renderStage(g){
     var anyTerms = g.categories.some(function(c){ return c.terms.length>0; });
-    var remaining = totalRemaining(g);
-    var exhausted = anyTerms && remaining===0;
-    var canDraw = anyTerms && remaining>0;
     var lastRound = g.rounds[g.rounds.length-1];
-    var btnLabel = exhausted ? "Alle Begriffe gezogen"
-      : g.rounds.length===0 ? "Erste Ziehung starten" : "Nächste Ziehung starten";
-    var btnTitle = "";
-    if(!anyTerms) btnTitle = ' title="Füge zuerst mindestens einen Begriff hinzu"';
-    else if(exhausted) btnTitle = ' title="Alle Begriffe wurden schon gezogen — neue hinzufügen oder Ziehungen zurücksetzen"';
+    var btnLabel = g.rounds.length===0 ? "Erste Ziehung starten" : "Nächste Ziehung starten";
+    var btnTitle = anyTerms ? "" : ' title="Füge zuerst mindestens einen Begriff hinzu"';
 
     var html = '<div class="stage">'+
-      '<h2 class="section-head">Ziehung<span class="hint">1 Begriff pro Kategorie, Gezogenes fällt für später raus</span></h2>'+
-      '<div class="stage-btn-row"><button type="button" class="btn-primary" data-action="draw-round" '+(canDraw?'':'disabled')+btnTitle+'>'+btnLabel+'</button></div>';
+      '<h2 class="section-head">Ziehung<span class="hint">1 Begriff pro Kategorie — kleinere Kategorien starten automatisch von vorne, sobald sie durch sind</span></h2>'+
+      '<div class="stage-btn-row"><button type="button" class="btn-primary" data-action="draw-round" '+(anyTerms?'':'disabled')+btnTitle+'>'+btnLabel+'</button></div>';
 
     if(lastRound){
       html += '<div class="reveal-row">'+ lastRound.results.map(renderReveal).join("") +'</div>';
@@ -799,7 +805,6 @@
     var shown = historyExpanded ? rounds : rounds.slice(0,5);
     var rows = shown.map(function(round){
       var items = round.results.map(function(r){
-        if(r.empty) return '<span class="history-item empty">'+esc(r.categoryName)+': <i>leer</i></span>';
         return '<span class="history-item">'+esc(r.categoryName)+': <b>'+esc(r.text)+'</b></span>';
       }).join('<span class="history-sep">·</span>');
       return '<div class="history-row"><span class="history-round">Runde '+round.number+'</span>'+items+'</div>';
@@ -846,7 +851,7 @@
     var header =
       '<header class="top"><div class="block-inner">'+
         '<span class="star star--1">★</span><span class="star star--2">★</span>'+
-        '<div><h1 class="wordmark">Losbude</h1><p class="tagline">Begriffe pro Kategorie sammeln, pro Runde je einen zufälligen ziehen — gezogene Begriffe kommen für spätere Runden nicht mehr dran.</p></div>'+
+        '<div><h1 class="wordmark">Losbude</h1><p class="tagline">Begriffe pro Kategorie sammeln, pro Runde je einen zufälligen ziehen. Ist eine Kategorie durch, startet sie automatisch wieder von vorne, ohne den zuletzt gezogenen Begriff sofort zu wiederholen.</p></div>'+
         '<div class="stat-badge">Runden gespielt: <b class="mono">'+g.rounds.length+'</b><br>Begriffe übrig: <b class="mono">'+totalRemaining(g)+'</b></div>'+
       '</div></header>';
 
