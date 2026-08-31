@@ -170,6 +170,9 @@
     font-size:1.05rem;
     text-transform:uppercase;
     padding-right:0.5rem;
+    -webkit-hyphens:auto;
+    hyphens:auto;
+    overflow-wrap:break-word;
   }
   .game-meta{ font-size:0.76rem; color:var(--muted); margin-top:0.35rem; }
   .game-actions{
@@ -434,8 +437,9 @@
     padding:0.22rem 0.65rem;
     box-shadow:3px 3px 0 var(--shadow);
     text-align:center;
-    overflow-wrap:anywhere;
-    word-break:break-word;
+    -webkit-hyphens:auto;
+    hyphens:auto;
+    overflow-wrap:break-word;
   }
   .reveal-term{
     font-family:var(--font-display);
@@ -444,9 +448,9 @@
     padding:0 0.9rem;
     text-align:center;
     text-wrap:balance;
-    overflow-wrap:anywhere;
-    word-break:break-word;
+    -webkit-hyphens:auto;
     hyphens:auto;
+    overflow-wrap:break-word;
     line-height:1.2;
     min-height:2.6em;
     display:flex; align-items:center; justify-content:center;
@@ -484,6 +488,11 @@
 <script>
 (function(){
   "use strict";
+  // Sets the document language so the browser's German hyphenation
+  // dictionary kicks in for `hyphens:auto` (works whether this file is
+  // wrapped by a preview or served standalone as its own page).
+  document.documentElement.lang = "de";
+
   var STORAGE_KEY = "losbude:v2";
   var LEGACY_KEY = "losbude:v1";
   var pendingFocus = null;
