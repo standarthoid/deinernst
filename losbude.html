@@ -288,6 +288,43 @@
   .active-game-name:hover{ border-bottom-color:#D8CBA8; }
   .active-game-name:focus{ outline:none; border-bottom-color:var(--pink); }
 
+  .share-row{
+    display:flex;
+    align-items:center;
+    gap:0.9rem;
+    flex-wrap:wrap;
+    margin-bottom:0.8rem;
+  }
+  .share-status{ font-size:0.78rem; color:var(--muted); }
+  .share-box{
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:0.65rem 0.85rem;
+    margin-bottom:1.3rem;
+    display:flex;
+    flex-direction:column;
+    gap:0.4rem;
+    max-width:32rem;
+  }
+  .share-label{
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--muted);
+  }
+  .share-copy-row{ display:flex; gap:0.5rem; }
+  .share-link-input{
+    flex:1; min-width:0;
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    padding:0.4rem 0.55rem;
+    border-radius:8px;
+    border:2px solid var(--ink);
+    background:var(--bg);
+    color:var(--ink);
+  }
+
   .cat-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
@@ -550,6 +587,43 @@
     var g = activeGame();
     if(g) g.updatedAt = Date.now();
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ /* storage unavailable */ }
+    if(g && g.isSharing && g.shareId) broadcastGame(g);
+  }
+
+  // ---------- live sharing (host → viewers, via the free ntfy.sh relay) ----------
+
+  function genShareId(){
+    return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  function broadcastGame(g){
+    try{
+      var payload = JSON.stringify({
+        name: g.name,
+        categories: g.categories,
+        rounds: g.rounds,
+        nextRoundNumber: g.nextRoundNumber,
+        updatedAt: g.updatedAt
+      });
+      fetch("https://ntfy.sh/" + encodeURIComponent(g.shareId), {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: payload
+      }).catch(function(){ /* relay unreachable — local play keeps working regardless */ });
+    }catch(e){ /* fetch unavailable */ }
+  }
+
+  function toggleSharing(){
+    var g = activeGame();
+    if(!g) return;
+    if(g.isSharing){
+      g.isSharing = false;
+    } else {
+      if(!g.shareId) g.shareId = genShareId();
+      g.isSharing = true;
+    }
+    save();
+    render();
   }
 
   function esc(s){
@@ -767,6 +841,27 @@
     );
   }
 
+  function renderSharingBox(g){
+    var toggleLabel = g.isSharing ? "Live-Teilen beenden" : "Live teilen";
+    var html = '<div class="share-row">'+
+      '<button type="button" class="btn-secondary" data-action="toggle-sharing">'+toggleLabel+'</button>';
+    if(g.isSharing){
+      html += '<span class="share-status">🟢 Live — Zuschauer:innen sehen jede Ziehung sofort</span>';
+    }
+    html += '</div>';
+    if(g.isSharing && g.shareId){
+      var shareUrl = location.origin + location.pathname + "?watch=" + g.shareId;
+      html += '<div class="share-box">'+
+        '<label class="share-label">Link zum Mitschauen</label>'+
+        '<div class="share-copy-row">'+
+          '<input type="text" class="share-link-input" readonly data-role="share-link" value="'+esc(shareUrl)+'" aria-label="Link zum Mitschauen">'+
+          '<button type="button" class="btn-secondary" data-action="copy-share-link">Kopieren</button>'+
+        '</div>'+
+      '</div>';
+    }
+    return html;
+  }
+
   function renderCategories(g){
     var cards = g.categories.map(renderCategoryCard).join("");
     var ghost = '<div class="cat-card is-empty" data-action="add-category" role="button" tabindex="0"><span>+</span>Kategorie hinzufügen</div>';
@@ -775,6 +870,7 @@
         '<span class="eyebrow">Aktuelles Spiel</span>'+
         '<input class="active-game-name" type="text" data-role="active-game-name" value="'+esc(g.name)+'" aria-label="Name des aktuellen Spiels">'+
       '</div>'+
+      renderSharingBox(g)+
       '<div class="cat-grid">'+cards+ghost+'</div>'
     );
   }
@@ -854,6 +950,24 @@
     );
   }
 
+  function renderCategoryCardReadOnly(cat){
+    var remaining = cat.terms.filter(function(t){ return !t.drawn; }).length;
+    var drawnCount = cat.terms.length - remaining;
+    var chips = cat.terms.map(function(t){
+      if(t.drawn){
+        return '<span class="chip chip--drawn"><span>'+esc(t.text)+'</span><span class="chip-round">R'+t.roundDrawn+'</span></span>';
+      }
+      return '<span class="chip"><span>'+esc(t.text)+'</span></span>';
+    }).join("");
+    return (
+      '<div class="cat-card">'+
+        '<div class="cat-card-head"><span class="cat-name-input">'+esc(cat.name)+'</span></div>'+
+        '<div class="counts"><span class="mono">'+remaining+'</span> übrig · <span class="mono">'+drawnCount+'</span> gezogen</div>'+
+        '<div class="chip-row">'+ (chips || '<span class="counts" style="padding:0.15rem 0;">Noch keine Begriffe</span>') +'</div>'+
+      '</div>'
+    );
+  }
+
   function renderGames(){
     var cards = state.games.slice().sort(function(a,b){ return b.updatedAt-a.updatedAt; }).map(renderGameCard).join("");
     var ghost = '<div class="game-card is-empty" data-action="create-game" role="button" tabindex="0"><span>+</span>Neues Spiel</div>';
@@ -876,6 +990,7 @@
 
     var catsInner = g.categories.length===0
       ? '<div class="active-game-head"><span class="eyebrow">Aktuelles Spiel</span><input class="active-game-name" type="text" data-role="active-game-name" value="'+esc(g.name)+'" aria-label="Name des aktuellen Spiels"></div>'+
+        renderSharingBox(g)+
         '<div class="cat-grid"><div class="cat-card is-empty" data-action="add-category" role="button" tabindex="0"><span>+</span>Kategorie hinzufügen</div></div>'+
         '<p class="empty-note">Leg los: Kategorie anlegen, dann Begriffe eintragen — z. B. „Orte“, „Charaktere“, „Requisiten“.</p>'
       : renderCategories(g);
@@ -920,7 +1035,98 @@
     render();
   }
 
-  // ---------- event delegation ----------
+  // ---------- Zuschauer-Modus (read-only, driven by ?watch=<id>) ----------
+
+  function runViewerMode(shareId){
+    var app = document.getElementById("app");
+    var connected = false;
+    var snapshot = null;
+
+    function applyMessage(raw){
+      try{
+        var data = JSON.parse(raw);
+        if(data && Array.isArray(data.categories)){
+          snapshot = data;
+          renderViewer();
+        }
+      }catch(e){ /* ignore anything that isn't a Losbude snapshot */ }
+    }
+
+    function renderViewer(){
+      var statusText = connected ? "🟢 Live" : "🔴 Verbinde …";
+      var header =
+        '<header class="top"><div class="block-inner">'+
+          '<span class="star star--1">★</span><span class="star star--2">★</span>'+
+          '<div><h1 class="wordmark">Losbude</h1><p class="tagline">'+
+            (snapshot ? "Zuschauer-Modus — du siehst live mit, was gerade gezogen wird." : "Zuschauer-Modus — warte auf die erste Übertragung …")+
+          '</p></div>'+
+          '<div class="stat-badge">'+statusText+'</div>'+
+        '</div></header>';
+
+        if(!snapshot){
+          app.innerHTML = header + '<div class="block block--cream"><div class="block-inner"><p class="empty-note">Noch keine Daten empfangen. Diese Seite aktualisiert sich automatisch, sobald der Host etwas teilt.</p></div></div>';
+          return;
+        }
+
+        var catsBlock = '<div class="block block--cream"><div class="block-inner">'+
+          '<h2 class="section-head">'+esc(snapshot.name || "Spiel")+'<span class="hint">Kategorien &amp; Begriffe (nur Ansicht)</span></h2>'+
+          '<div class="cat-grid">'+ snapshot.categories.map(renderCategoryCardReadOnly).join("") +'</div></div></div>';
+
+        var lastRound = snapshot.rounds[snapshot.rounds.length-1];
+        var stageInner = '<div class="stage"><h2 class="section-head">Ziehung</h2>';
+        stageInner += lastRound
+          ? '<div class="reveal-row">'+ lastRound.results.map(renderReveal).join("") +'</div>'
+          : '<p class="stage-empty">Noch keine Ziehung gestartet.</p>';
+        stageInner += '</div>';
+        var stageBlock = '<div class="block block--gold"><div class="block-inner">'+stageInner+'</div></div>';
+
+        var historyHtml = renderHistory(snapshot);
+        var historyBlock = historyHtml ? '<div class="block block--cream"><div class="block-inner">'+historyHtml+'</div></div>' : '';
+
+        var footer = '<footer class="foot">Losbude · Zuschauer-Modus, nur Ansicht</footer>';
+
+        app.innerHTML = header + catsBlock + stageBlock + historyBlock + footer;
+    }
+
+    renderViewer();
+
+    app.addEventListener("click", function(e){
+      var el = e.target.closest('[data-action="toggle-history"]');
+      if(el){ historyExpanded = !historyExpanded; renderViewer(); }
+    });
+
+    // hydrate with whatever the relay still has cached, then stay live via SSE
+    fetch("https://ntfy.sh/" + encodeURIComponent(shareId) + "/json?poll=1&since=1h")
+      .then(function(res){ return res.text(); })
+      .then(function(text){
+        var lines = text.split("\n").filter(Boolean);
+        if(lines.length){
+          var last = JSON.parse(lines[lines.length-1]);
+          if(last && last.message) applyMessage(last.message);
+        }
+      })
+      .catch(function(){ /* no history yet, or the relay is unreachable */ });
+
+    try{
+      var es = new EventSource("https://ntfy.sh/" + encodeURIComponent(shareId) + "/sse");
+      es.onopen = function(){ connected = true; renderViewer(); };
+      es.onerror = function(){ connected = false; renderViewer(); };
+      es.addEventListener("message", function(evt){
+        try{
+          var envelope = JSON.parse(evt.data);
+          if(envelope && envelope.message) applyMessage(envelope.message);
+        }catch(e){ /* ignore malformed envelope */ }
+      });
+    }catch(e){ /* EventSource unavailable in this browser */ }
+  }
+
+  var watchId = new URLSearchParams(location.search).get("watch");
+  if(watchId){
+    runViewerMode(watchId);
+    return;
+  }
+
+  // ---------- event delegation (host / editing mode) ----------
 
   var app = document.getElementById("app");
 
@@ -952,6 +1158,17 @@
       case "undo-round": undoLastRound(); break;
       case "reset-draws": withConfirm("reset-draws", "", resetDraws); break;
       case "toggle-history": historyExpanded = !historyExpanded; render(); break;
+      case "toggle-sharing": toggleSharing(); break;
+      case "copy-share-link": {
+        var linkInput = app.querySelector('[data-role="share-link"]');
+        if(linkInput){
+          linkInput.select();
+          if(navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(linkInput.value).catch(function(){ /* selection still lets the user copy manually */ });
+          }
+        }
+        break;
+      }
     }
   });
 
