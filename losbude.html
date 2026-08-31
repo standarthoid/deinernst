@@ -1039,21 +1039,27 @@
 
   function runViewerMode(shareId){
     var app = document.getElementById("app");
-    var connected = false;
     var snapshot = null;
+    var lastContactAt = 0;
+    var startedAt = Date.now();
+    var pollFailures = 0;
+
+    function isConnected(){ return lastContactAt>0 && (Date.now()-lastContactAt) < 10000; }
+    function isStuck(){ return !snapshot && !isConnected() && (Date.now()-startedAt) > 8000; }
 
     function applyMessage(raw){
       try{
         var data = JSON.parse(raw);
         if(data && Array.isArray(data.categories)){
           snapshot = data;
+          lastContactAt = Date.now();
           renderViewer();
         }
       }catch(e){ /* ignore anything that isn't a Losbude snapshot */ }
     }
 
     function renderViewer(){
-      var statusText = connected ? "🟢 Live" : "🔴 Verbinde …";
+      var statusText = isConnected() ? "🟢 Live" : "🔴 Verbinde …";
       var header =
         '<header class="top"><div class="block-inner">'+
           '<span class="star star--1">★</span><span class="star star--2">★</span>'+
@@ -1064,7 +1070,11 @@
         '</div></header>';
 
         if(!snapshot){
-          app.innerHTML = header + '<div class="block block--cream"><div class="block-inner"><p class="empty-note">Noch keine Daten empfangen. Diese Seite aktualisiert sich automatisch, sobald der Host etwas teilt.</p></div></div>';
+          var msg = isStuck()
+            ? 'Keine Verbindung zum Live-Dienst bekommen. Das liegt oft an einem Werbeblocker, Datenschutz-Add-on oder einer Firewall, die Verbindungen zu <span class="mono">ntfy.sh</span> blockiert — probier ggf. ein anderes Netzwerk oder deaktiviere Blocker für diese Seite.'
+              + ' <button type="button" class="link-btn" data-action="retry-watch">Erneut versuchen</button>'
+            : 'Noch keine Daten empfangen. Diese Seite aktualisiert sich automatisch, sobald der Host etwas teilt.';
+          app.innerHTML = header + '<div class="block block--cream"><div class="block-inner"><p class="empty-note">'+msg+'</p></div></div>';
           return;
         }
 
@@ -1091,33 +1101,51 @@
     renderViewer();
 
     app.addEventListener("click", function(e){
-      var el = e.target.closest('[data-action="toggle-history"]');
-      if(el){ historyExpanded = !historyExpanded; renderViewer(); }
+      var histEl = e.target.closest('[data-action="toggle-history"]');
+      if(histEl){ historyExpanded = !historyExpanded; renderViewer(); return; }
+      var retryEl = e.target.closest('[data-action="retry-watch"]');
+      if(retryEl){ pollTick(); }
     });
 
-    // hydrate with whatever the relay still has cached, then stay live via SSE
-    fetch("https://ntfy.sh/" + encodeURIComponent(shareId) + "/json?poll=1&since=1h")
-      .then(function(res){ return res.text(); })
-      .then(function(text){
-        var lines = text.split("\n").filter(Boolean);
-        if(lines.length){
-          var last = JSON.parse(lines[lines.length-1]);
-          if(last && last.message) applyMessage(last.message);
-        }
-      })
-      .catch(function(){ /* no history yet, or the relay is unreachable */ });
+    // Polling is the reliable baseline — it's a plain HTTPS request, so it
+    // gets through most ad-blockers/firewalls that kill long-lived SSE
+    // streams. SSE (below) just makes updates feel instant when it works.
+    function pollTick(){
+      fetch("https://ntfy.sh/" + encodeURIComponent(shareId) + "/json?poll=1&since=2h")
+        .then(function(res){
+          if(!res.ok) throw new Error("bad status");
+          return res.text();
+        })
+        .then(function(text){
+          pollFailures = 0;
+          var lines = text.split("\n").filter(Boolean);
+          if(lines.length){
+            var last = JSON.parse(lines[lines.length-1]);
+            if(last && last.message){ applyMessage(last.message); return; }
+          }
+          // reachable, just nothing shared (yet) — still counts as contact
+          lastContactAt = Date.now();
+          renderViewer();
+        })
+        .catch(function(){
+          pollFailures++;
+          renderViewer();
+        });
+    }
+    pollTick();
+    setInterval(pollTick, 4000);
+    setInterval(renderViewer, 4000); // keeps the status/"stuck" message current between ticks
 
     try{
       var es = new EventSource("https://ntfy.sh/" + encodeURIComponent(shareId) + "/sse");
-      es.onopen = function(){ connected = true; renderViewer(); };
-      es.onerror = function(){ connected = false; renderViewer(); };
+      es.onopen = function(){ lastContactAt = Date.now(); renderViewer(); };
       es.addEventListener("message", function(evt){
         try{
           var envelope = JSON.parse(evt.data);
           if(envelope && envelope.message) applyMessage(envelope.message);
         }catch(e){ /* ignore malformed envelope */ }
       });
-    }catch(e){ /* EventSource unavailable in this browser */ }
+    }catch(e){ /* EventSource unavailable in this browser — polling still covers us */ }
   }
 
   var watchId = new URLSearchParams(location.search).get("watch");
